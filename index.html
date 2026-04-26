@@ -1,0 +1,1457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JSW Motors — Competency & TNA Tool</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Serif+Display&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --jsw:#0F2444;--jsw2:#1a3a6b;--jsw3:#2563EB;--acc:#F59E0B;
+  --ev:#7C3AED;--ev-l:#EDE9FE;
+  --red:#DC2626;--red-l:#FEF2F2;
+  --ora:#EA580C;--ora-l:#FFF7ED;
+  --amb:#D97706;--amb-l:#FFFBEB;
+  --grn:#059669;--grn-l:#ECFDF5;
+  --teal:#0F766E;--teal-l:#F0FDFA;
+  --g50:#F8FAFC;--g100:#F1F5F9;--g200:#E2E8F0;--g300:#CBD5E1;
+  --g400:#94A3B8;--g500:#64748B;--g600:#475569;--g700:#334155;--g800:#1E293B;
+  --white:#FFFFFF;
+  --shadow:0 1px 3px rgba(0,0,0,.08),0 4px 16px rgba(0,0,0,.06);
+  --shadow-lg:0 8px 32px rgba(15,36,68,.12),0 2px 8px rgba(0,0,0,.06);
+  --radius:12px;--radius-sm:8px;--radius-xs:6px;
+}
+body{font-family:'DM Sans',sans-serif;background:#EEF2F8;color:var(--g800);min-height:100vh;font-size:14px}
+
+/* ── HEADER ── */
+header{background:var(--jsw);padding:0 32px;height:60px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:200;box-shadow:0 2px 12px rgba(0,0,0,.3)}
+.hdr-left{display:flex;align-items:center;gap:14px}
+.hdr-badge{width:36px;height:36px;background:var(--acc);border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:'DM Serif Display',serif;font-size:14px;color:var(--jsw);font-weight:700;letter-spacing:-0.5px}
+.hdr-title{font-size:15px;font-weight:600;color:#fff;letter-spacing:.2px}
+.hdr-sub{font-size:11px;color:#93B4D8;margin-top:1px}
+.hdr-right{display:flex;align-items:center;gap:12px}
+.hdr-pill{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);padding:4px 10px;border-radius:20px;font-size:11px;color:#C8D8EC;font-weight:500}
+.hdr-pill.green{background:rgba(5,150,105,.2);border-color:rgba(5,150,105,.4);color:#6EE7B7}
+
+/* ── NAV ── */
+nav{background:#fff;border-bottom:1px solid var(--g200);display:flex;overflow-x:auto;position:sticky;top:60px;z-index:199;box-shadow:0 1px 4px rgba(0,0,0,.04);scrollbar-width:none}
+nav::-webkit-scrollbar{display:none}
+.nav-btn{border:none;background:none;padding:14px 20px;font-size:12.5px;font-weight:500;color:var(--g500);cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;transition:all .15s;font-family:'DM Sans',sans-serif;display:flex;align-items:center;gap:6px}
+.nav-btn.active{color:var(--jsw);border-bottom-color:var(--acc);font-weight:600}
+.nav-btn:hover:not(.active){background:var(--g50);color:var(--g700)}
+.nav-badge{background:var(--red);color:#fff;font-size:9px;padding:1px 5px;border-radius:10px;min-width:16px;text-align:center}
+
+/* ── LAYOUT ── */
+.main{max-width:1080px;margin:0 auto;padding:28px 20px}
+.tab{display:none}.tab.active{display:block}
+
+/* ── CARDS ── */
+.card{background:#fff;border-radius:var(--radius);border:1px solid var(--g200);padding:24px;margin-bottom:20px;box-shadow:var(--shadow)}
+.card-sm{padding:16px}
+.card-flat{background:var(--g50);border-radius:var(--radius-sm);border:1px solid var(--g200);padding:14px;margin-bottom:10px}
+
+/* ── TYPOGRAPHY ── */
+h2{font-family:'DM Serif Display',serif;font-size:22px;color:var(--jsw);margin-bottom:6px;font-weight:400}
+h3{font-size:14px;font-weight:600;color:var(--jsw);margin-bottom:4px}
+h4{font-size:13px;font-weight:600;color:var(--g700)}
+p{font-size:13px;color:var(--g600);line-height:1.65}
+small{font-size:11px;color:var(--g400)}
+
+/* ── TAGS ── */
+.tag{display:inline-flex;align-items:center;gap:3px;font-size:10px;padding:2px 8px;border-radius:20px;font-weight:600;letter-spacing:.3px}
+.tag-tech{background:#DBEAFE;color:#1D4ED8}
+.tag-beh{background:#FCE7F3;color:#9D174D}
+.tag-ev{background:var(--ev-l);color:var(--ev);border:1px solid #C4B5FD}
+.tag-crit{background:var(--red-l);color:var(--red)}
+.tag-mod{background:var(--ora-l);color:var(--ora)}
+.tag-min{background:var(--amb-l);color:var(--amb)}
+.tag-none{background:var(--grn-l);color:var(--grn)}
+.tag-exc{background:#EFF6FF;color:#2563EB}
+.tag-neutral{background:var(--g100);color:var(--g600)}
+.ev-dot{display:inline-block;width:6px;height:6px;background:var(--ev);border-radius:50%;margin-right:2px}
+
+/* ── FORM ELEMENTS ── */
+label{font-size:12px;font-weight:600;color:var(--g700);display:block;margin-bottom:5px}
+select,input[type=text],input[type=email],textarea{width:100%;padding:9px 12px;border:1px solid var(--g200);border-radius:var(--radius-sm);font-size:13px;color:var(--g800);background:#fff;outline:none;font-family:'DM Sans',sans-serif;transition:border-color .15s}
+select:focus,input:focus,textarea:focus{border-color:var(--jsw3);box-shadow:0 0 0 3px rgba(37,99,235,.1)}
+textarea{resize:vertical;min-height:60px}
+
+/* ── BUTTONS ── */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:9px 18px;border-radius:var(--radius-sm);font-size:13px;font-weight:500;border:none;cursor:pointer;transition:all .15s;font-family:'DM Sans',sans-serif}
+.btn-primary{background:var(--jsw);color:#fff}.btn-primary:hover{background:var(--jsw2)}
+.btn-accent{background:var(--acc);color:var(--jsw)}.btn-accent:hover{background:#F59E0B}
+.btn-outline{background:#fff;color:var(--jsw);border:1.5px solid var(--jsw)}.btn-outline:hover{background:var(--g50)}
+.btn-danger{background:#fff;color:var(--red);border:1.5px solid var(--red)}.btn-danger:hover{background:var(--red-l)}
+.btn-sm{padding:6px 12px;font-size:12px}
+.btn-ghost{background:none;color:var(--g500);border:1px solid var(--g200)}.btn-ghost:hover{background:var(--g100)}
+
+/* ── GRIDS ── */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+
+/* ── OVERVIEW CARDS ── */
+.ov-phase{border-radius:var(--radius);padding:20px;margin-bottom:14px;position:relative;overflow:hidden}
+.ov-phase-1{background:linear-gradient(135deg,#0F2444 0%,#1a3a6b 100%);color:#fff}
+.ov-phase-2{background:linear-gradient(135deg,#4C1680 0%,#7C3AED 100%);color:#fff}
+.ov-phase-3{background:linear-gradient(135deg,#065F46 0%,#059669 100%);color:#fff}
+.ov-phase-4{background:linear-gradient(135deg,#0C4A6E 0%,#0F766E 100%);color:#fff}
+.ov-phase h3{color:#fff;font-size:14px;margin-bottom:6px;font-weight:600}
+.ov-phase p{color:rgba(255,255,255,.75);font-size:12px}
+.ov-item{display:flex;align-items:flex-start;gap:8px;padding:7px 0;font-size:12px;color:rgba(255,255,255,.85);border-bottom:1px solid rgba(255,255,255,.08)}
+.ov-item:last-child{border-bottom:none}
+.ov-item::before{content:"›";font-weight:700;color:var(--acc);flex-shrink:0;margin-top:1px;font-size:14px}
+.phase-num{position:absolute;right:16px;top:16px;font-family:'DM Serif Display',serif;font-size:48px;color:rgba(255,255,255,.08);font-weight:400;line-height:1}
+
+/* ── PROFICIENCY SCALE ── */
+.prof-scale{display:flex;gap:0;border-radius:var(--radius-sm);overflow:hidden;border:1px solid var(--g200);margin:12px 0}
+.prof-level{flex:1;padding:10px 6px;text-align:center;font-size:11px;font-weight:500;cursor:default}
+.pl-1{background:#F1F5F9;color:#64748B}
+.pl-2{background:#DBEAFE;color:#1D4ED8}
+.pl-3{background:#D1FAE5;color:#065F46}
+.pl-4{background:#FEF3C7;color:#92400E}
+.pl-5{background:#FEE2E2;color:#991B1B}
+.pl-num{font-size:16px;font-weight:700;display:block;margin-bottom:2px}
+.pl-lbl{font-size:10px;font-weight:600;display:block}
+.pl-desc{font-size:9px;color:inherit;opacity:.7;display:block;margin-top:2px;line-height:1.3}
+
+/* ── COMPETENCY ROWS ── */
+.comp-row{display:flex;align-items:flex-start;gap:12px;padding:12px 14px;border-radius:var(--radius-sm);border:1px solid var(--g200);margin-bottom:8px;background:#fff;transition:all .15s;cursor:default}
+.comp-row:hover{border-color:var(--jsw3);box-shadow:0 2px 8px rgba(37,99,235,.08)}
+.comp-row.highlighted{border-color:var(--ev)!important;background:var(--ev-l)!important}
+.comp-idx{min-width:24px;height:24px;border-radius:50%;background:var(--g100);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:var(--g500);flex-shrink:0;margin-top:2px}
+.comp-body{flex:1;min-width:0}
+.comp-name{font-size:13px;font-weight:600;color:var(--g800);display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.comp-desc{font-size:11px;color:var(--g400);margin-top:3px;line-height:1.5}
+.comp-meta{display:flex;align-items:center;gap:6px;margin-top:6px}
+.d1-badge{display:flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;font-size:10px;font-weight:700;color:#fff;flex-shrink:0}
+.d1-1{background:#94A3B8}.d1-2{background:#60A5FA}.d1-3{background:#34D399}.d1-4{background:#FBBF24}.d1-5{background:#F87171}
+
+/* ── STAR RATING ── */
+.stars{display:flex;gap:2px}
+.star{font-size:20px;cursor:pointer;color:#E2E8F0;transition:color .1s;line-height:1}
+.star.on{color:#F59E0B}
+.star:hover{color:#FCD34D}
+
+/* ── QUESTIONNAIRE FORM ── */
+.form-section{background:var(--g50);border:1px solid var(--g200);border-radius:var(--radius);padding:20px;margin-bottom:20px}
+.form-section-header{display:flex;align-items:center;gap:10px;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--g200)}
+.form-section-num{width:28px;height:28px;border-radius:50%;background:var(--jsw);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
+.resp-row{display:grid;grid-template-columns:2fr 80px 100px 90px;gap:10px;align-items:center;padding:10px 12px;border-radius:var(--radius-sm);border:1px solid var(--g200);background:#fff;margin-bottom:6px;transition:all .15s}
+.resp-row:hover{border-color:var(--g300)}
+.resp-row.highlighted{border-color:var(--ev);background:var(--ev-l)}
+.resp-row.top10{border-color:var(--ev);background:#F5F3FF}
+.rating-label{font-size:10px;color:var(--g400);text-align:center;margin-top:2px}
+.importance-select{padding:6px 8px;border:1px solid var(--g200);border-radius:6px;font-size:12px;background:#fff;width:100%;font-family:'DM Sans',sans-serif}
+.top10-checkbox{display:flex;flex-direction:column;align-items:center;gap:2px}
+.top10-checkbox input{width:16px;height:16px;cursor:pointer;accent-color:var(--ev)}
+.desired-select{padding:6px 8px;border:1px solid var(--g200);border-radius:6px;font-size:12px;background:#fff;width:100%;font-family:'DM Sans',sans-serif}
+
+/* ── SELF ASSESSMENT ── */
+.sa-row{display:grid;grid-template-columns:2fr 140px 1fr;gap:12px;align-items:center;padding:10px 12px;border-radius:var(--radius-sm);border:1px solid var(--g200);background:#fff;margin-bottom:6px}
+.slider-wrap{display:flex;flex-direction:column;gap:3px}
+input[type=range]{width:100%;accent-color:var(--jsw3);height:4px;cursor:pointer}
+.slider-labels{display:flex;justify-content:space-between;font-size:9px;color:var(--g400)}
+.slider-val{font-size:12px;font-weight:600;color:var(--jsw);text-align:center}
+
+/* ── GAP ANALYSIS ── */
+.gap-row{display:grid;grid-template-columns:2fr 80px 160px 60px 100px;gap:10px;align-items:center;padding:10px 12px;border-radius:var(--radius-sm);margin-bottom:6px;font-size:12px}
+.gap-hdr{font-weight:600;color:var(--g500);font-size:11px;padding:6px 12px;display:grid;grid-template-columns:2fr 80px 160px 60px 100px;gap:10px}
+.gap-circle{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;margin:0 auto}
+.gc-crit{background:var(--red)}.gc-mod{background:var(--ora)}.gc-min{background:var(--amb)}.gc-none{background:var(--grn)}.gc-exc{background:var(--jsw3)}
+
+/* ── TNA ── */
+.tna-stage{border-radius:var(--radius);padding:18px;margin-bottom:14px;border:1px solid var(--g200);background:#fff;box-shadow:var(--shadow)}
+.tna-hdr{display:flex;align-items:flex-start;gap:12px;margin-bottom:10px}
+.tna-num{width:32px;height:32px;border-radius:50%;background:var(--jsw);color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0}
+.path-card{padding:12px 14px;border-radius:var(--radius-sm);border-left:3px solid transparent;margin-bottom:8px;background:var(--g50)}
+.path-crit{border-color:var(--red);background:var(--red-l)}
+.path-mod{border-color:var(--ora);background:var(--ora-l)}
+.path-min{border-color:var(--amb);background:var(--amb-l)}
+.path-reinf{border-color:var(--teal);background:var(--teal-l)}
+.learning-phases{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px}
+.lp-card{background:var(--g50);border:1px solid var(--g200);border-radius:var(--radius-sm);padding:14px}
+.lp-card.active-phase{border-color:var(--acc);background:#FFFBEB}
+.lp-header{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.lp-dot{width:10px;height:10px;border-radius:50%;background:var(--acc);flex-shrink:0}
+
+/* ── STATS BAR ── */
+.stats-bar{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:20px}
+.stat-box{background:#fff;border-radius:var(--radius-sm);padding:14px;text-align:center;border:1px solid var(--g200);box-shadow:var(--shadow)}
+.stat-num{font-family:'DM Serif Display',serif;font-size:28px;font-weight:400;line-height:1}
+.stat-lbl{font-size:10px;color:var(--g400);margin-top:3px;font-weight:500}
+
+/* ── RESPONSE DASHBOARD ── */
+.resp-card{background:#fff;border-radius:var(--radius);border:1px solid var(--g200);padding:20px;margin-bottom:16px;box-shadow:var(--shadow)}
+.response-item{display:flex;align-items:flex-start;gap:12px;padding:12px;border:1px solid var(--g200);border-radius:var(--radius-sm);margin-bottom:8px;background:var(--g50)}
+.resp-avatar{width:36px;height:36px;border-radius:50%;background:var(--jsw);color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0}
+.bar-wrap{background:var(--g100);border-radius:4px;height:8px;overflow:hidden;margin-top:4px}
+.bar-fill{height:100%;border-radius:4px;transition:width .5s ease}
+
+/* ── SUCCESS / ALERTS ── */
+.alert{padding:12px 16px;border-radius:var(--radius-sm);font-size:13px;margin-bottom:16px;display:flex;align-items:flex-start;gap:10px}
+.alert-success{background:var(--grn-l);border:1px solid #A7F3D0;color:#065F46}
+.alert-info{background:#EFF6FF;border:1px solid #BFDBFE;color:#1E40AF}
+.alert-warn{background:var(--amb-l);border:1px solid #FDE68A;color:#92400E}
+.alert-hidden{display:none}
+
+/* ── PROGRESS RING ── */
+.prog-ring{position:relative;display:inline-block;width:60px;height:60px}
+.prog-ring svg{transform:rotate(-90deg)}
+.prog-ring .ring-bg{stroke:#E2E8F0;fill:none;stroke-width:5}
+.prog-ring .ring-fill{fill:none;stroke-width:5;stroke-linecap:round;transition:stroke-dashoffset .5s ease}
+.prog-ring .ring-text{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:var(--jsw)}
+
+/* ── PRINT ── */
+@media print{nav,header .hdr-right,#btn-export-wrap{display:none}.main{padding:0}body{background:#fff}}
+@media(max-width:768px){.g2,.g3,.g4,.stats-bar,.learning-phases{grid-template-columns:1fr}.gap-row,.gap-hdr,.resp-row,.sa-row{grid-template-columns:1fr 1fr}}
+
+/* ── MISC ── */
+.divider{height:1px;background:var(--g200);margin:16px 0}
+.chip-row{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}
+.info-strip{background:linear-gradient(135deg,var(--jsw),var(--jsw2));color:#fff;border-radius:var(--radius);padding:16px 20px;margin-bottom:20px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.info-strip p{color:rgba(255,255,255,.8);font-size:12px}
+.scroll-hint{font-size:11px;color:var(--g400);text-align:right;margin-bottom:6px;font-style:italic}
+.empty-state{text-align:center;padding:40px 20px;color:var(--g400)}
+.empty-icon{font-size:40px;margin-bottom:10px}
+.sticky-bar{position:sticky;bottom:0;background:#fff;border-top:1px solid var(--g200);padding:12px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;margin:-28px -20px;margin-top:20px;box-shadow:0 -4px 16px rgba(0,0,0,.06)}
+.top10-counter{font-size:12px;color:var(--g600);font-weight:500}
+.top10-counter span{color:var(--ev);font-weight:700;font-size:14px}
+.section-divider{display:flex;align-items:center;gap:12px;margin:20px 0 14px}
+.section-divider::before,.section-divider::after{content:'';flex:1;height:1px;background:var(--g200)}
+.section-divider-text{font-size:11px;font-weight:600;color:var(--g400);white-space:nowrap;letter-spacing:.8px;text-transform:uppercase}
+.save-toast{position:fixed;bottom:24px;right:24px;background:var(--jsw);color:#fff;padding:10px 18px;border-radius:var(--radius-sm);font-size:13px;font-weight:500;display:none;align-items:center;gap:8px;box-shadow:var(--shadow-lg);z-index:999;animation:slideUp .2s ease}
+@keyframes slideUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+</style>
+</head>
+<body>
+
+<div class="save-toast" id="toast">✓ Response saved successfully</div>
+
+<header>
+  <div class="hdr-left">
+    <div class="hdr-badge">JSW</div>
+    <div>
+      <div class="hdr-title">JSW Motors Ltd. — Competency & Training Needs Analysis Tool</div>
+      <div class="hdr-sub">GET & MT Program 2026 · Greenfield EV Manufacturing</div>
+    </div>
+  </div>
+  <div class="hdr-right">
+    <div class="hdr-pill">MIP 2026</div>
+    <div class="hdr-pill green">● Live</div>
+  </div>
+</header>
+
+<nav id="main-nav">
+  <button class="nav-btn active" data-tab="overview">📋 Overview</button>
+  <button class="nav-btn" data-tab="dict">📚 Competency Dictionary</button>
+  <button class="nav-btn" data-tab="fhq">📝 Functional Head Form</button>
+  <button class="nav-btn" data-tab="sa">👤 Self-Assessment</button>
+  <button class="nav-btn" data-tab="gap">📊 Gap Analysis</button>
+  <button class="nav-btn" data-tab="tna">🎯 TNA & Learning Pathways</button>
+  <button class="nav-btn" data-tab="dashboard">📈 Response Dashboard <span class="nav-badge" id="resp-count">0</span></button>
+</nav>
+
+<div class="main">
+
+<!-- ═══════════════════════════════════════════════════════════ TAB: OVERVIEW -->
+<div id="tab-overview" class="tab active">
+
+  <div class="info-strip">
+    <div>
+      <div style="font-size:18px;font-weight:600;font-family:'DM Serif Display',serif;margin-bottom:4px">JSW Motors Competency Framework — GET & MT Program 2026</div>
+      <p>This tool supports the Competency Mapping, Gap Analysis, and Training Needs Analysis initiative for the Graduate Engineer Trainee (GET) and Management Trainee (MT) hiring programme. Use each tab in sequence to validate competencies, collect proficiency data, analyse gaps, and design targeted learning interventions.</p>
+    </div>
+    <div style="flex-shrink:0;text-align:center">
+      <div style="font-size:32px;font-family:'DM Serif Display',serif;color:var(--acc)">233</div>
+      <div style="font-size:11px;color:rgba(255,255,255,.7)">Total Trainees</div>
+    </div>
+  </div>
+
+  <div class="g2" style="margin-bottom:20px">
+    <div class="card card-sm">
+      <h3>GET Programme — 6 Departments</h3>
+      <div style="margin-top:10px">
+        <div id="get-dept-chips"></div>
+      </div>
+    </div>
+    <div class="card card-sm">
+      <h3>MT Programme — 6 Functions</h3>
+      <div style="margin-top:10px">
+        <div id="mt-dept-chips"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Proficiency Scale -->
+  <div class="card">
+    <h3 style="margin-bottom:12px">Proficiency Scale — 5-Level Framework</h3>
+    <div class="prof-scale">
+      <div class="prof-level pl-1"><span class="pl-num">1</span><span class="pl-lbl">Awareness</span><span class="pl-desc">Knows the concept; theoretical knowledge only</span></div>
+      <div class="prof-level pl-2"><span class="pl-num">2</span><span class="pl-lbl">Basic</span><span class="pl-desc">Can perform with supervision and guidance</span></div>
+      <div class="prof-level pl-3"><span class="pl-num">3</span><span class="pl-lbl">Practitioner</span><span class="pl-desc">Performs independently and consistently</span></div>
+      <div class="prof-level pl-4"><span class="pl-num">4</span><span class="pl-lbl">Advanced</span><span class="pl-desc">Coaches others; handles complex situations</span></div>
+      <div class="prof-level pl-5"><span class="pl-num">5</span><span class="pl-lbl">Expert</span><span class="pl-desc">Sets standards; innovates; domain authority</span></div>
+    </div>
+  </div>
+
+  <!-- How to Use -->
+  <div class="g2">
+    <div class="ov-phase ov-phase-1"><div class="phase-num">1</div>
+      <h3>Step 1 — Functional Head Questionnaire</h3>
+      <p style="margin-bottom:10px">Functional heads identify the Top 10 critical competencies for their department and set minimum Day-1 readiness levels.</p>
+      <div class="ov-item">Select your programme type (GET / MT) and department</div>
+      <div class="ov-item">Rate the importance of each competency (1–5 stars)</div>
+      <div class="ov-item">Mark your top 10 priority competencies with a checkbox</div>
+      <div class="ov-item">Set the minimum Day-1 proficiency level required</div>
+      <div class="ov-item">Submit — response is saved automatically for dashboard analysis</div>
+    </div>
+    <div class="ov-phase ov-phase-2"><div class="phase-num">2</div>
+      <h3>Step 2 — GET / MT Self-Assessment</h3>
+      <p style="margin-bottom:10px">Each trainee rates their current proficiency level against all competencies for their function. Responses are stored for gap analysis.</p>
+      <div class="ov-item">Trainee enters their name, ID, and department</div>
+      <div class="ov-item">Rates current proficiency using the 5-level scale (honest self-assessment)</div>
+      <div class="ov-item">Provides a brief evidence note for each rating</div>
+      <div class="ov-item">Manager validates ratings at 30 days using the same form</div>
+      <div class="ov-item">Submit — response stored for gap analysis</div>
+    </div>
+    <div class="ov-phase ov-phase-3"><div class="phase-num">3</div>
+      <h3>Step 3 — Gap Analysis</h3>
+      <p style="margin-bottom:10px">Automatically calculates the gap between desired level (set by functional head) and current level (self-assessment) per competency.</p>
+      <div class="ov-item">Gap = Desired Level − Current Level</div>
+      <div class="ov-item">Critical gap (≥3): Immediate mandatory training — before Day 30</div>
+      <div class="ov-item">Moderate gap (2): Priority training — Month 1–2</div>
+      <div class="ov-item">Minor gap (1): Development — self-paced LMS, Month 2–3</div>
+      <div class="ov-item">Exceeds (≤0): Strength — leverage as peer trainer / buddy</div>
+    </div>
+    <div class="ov-phase ov-phase-4"><div class="phase-num">4</div>
+      <h3>Step 4 — TNA & Training Modules</h3>
+      <p style="margin-bottom:10px">Gap scores drive the Training Needs Analysis, which maps to structured learning pathways across the 12-month programme.</p>
+      <div class="ov-item">Auto-generates TNA recommendations from gap severity scores</div>
+      <div class="ov-item">Maps to 6-phase learning pathway (Orientation → Hi-Po Evaluation)</div>
+      <div class="ov-item">Recommends specific training modules, vendors, and timelines</div>
+      <div class="ov-item">Aligns to 70-20-10 learning model and Kirkpatrick evaluation</div>
+      <div class="ov-item">Feeds into individual development plans (IDPs) for each trainee</div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:20px">
+    <div class="g3">
+      <div style="text-align:center;padding:10px"><div style="font-size:28px;font-family:'DM Serif Display',serif;color:var(--jsw)">200</div><div style="font-size:11px;color:var(--g400);margin-top:2px">Graduate Engineer Trainees (GETs)</div></div>
+      <div style="text-align:center;padding:10px;border-left:1px solid var(--g200);border-right:1px solid var(--g200)"><div style="font-size:28px;font-family:'DM Serif Display',serif;color:var(--ev)">33</div><div style="font-size:11px;color:var(--g400);margin-top:2px">Management Trainees (MTs)</div></div>
+      <div style="text-align:center;padding:10px"><div style="font-size:28px;font-family:'DM Serif Display',serif;color:var(--acc)">40%</div><div style="font-size:11px;color:var(--g400);margin-top:2px">Female Hiring Target</div></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ TAB: DICT -->
+<div id="tab-dict" class="tab">
+  <div class="card">
+    <h2>Competency Dictionary</h2>
+    <p>Browse all competencies by programme type and department. Sourced from O*NET occupational framework and aligned to JSW Motors EV manufacturing context.</p>
+    <div style="display:flex;gap:12px;margin-top:16px;flex-wrap:wrap;align-items:flex-end">
+      <div style="flex:1;min-width:140px"><label>Programme Type</label><select id="dict-type" onchange="onDictTypeChange()"><option value="GET">GET — Graduate Engineer Trainee</option><option value="MT">MT — Management Trainee</option></select></div>
+      <div style="flex:1;min-width:200px"><label>Department</label><select id="dict-role" onchange="renderDict()"></select></div>
+    </div>
+  </div>
+  <div class="chip-row" id="dict-filters">
+    <button class="btn btn-sm btn-primary" onclick="setDictFilter('all',this)">All</button>
+    <button class="btn btn-sm btn-ghost" onclick="setDictFilter('Technical',this)">Technical</button>
+    <button class="btn btn-sm btn-ghost" onclick="setDictFilter('Behavioral',this)">Behavioural</button>
+    <button class="btn btn-sm btn-ghost" onclick="setDictFilter('ev',this)">EV-Specific</button>
+    <button class="btn btn-sm btn-ghost" onclick="setDictFilter('critical',this)">Day-1 Critical (≥3)</button>
+  </div>
+  <div id="dict-container"></div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════ TAB: FUNC HEAD Q -->
+<div id="tab-fhq" class="tab">
+  <div class="card">
+    <h2>Functional Head — Competency Prioritisation Form</h2>
+    <p>This form is to be completed by Functional Heads / Department Leads to identify the top 10 most critical competencies for their GET or MT cohort, and to define the minimum Day-1 readiness proficiency expected from trainees entering their function.</p>
+    <div class="alert alert-info" style="margin-top:12px">
+      <span>ℹ️</span><span><strong>Instructions:</strong> (1) Select your programme type and department. (2) Rate each competency by importance (1 = Not relevant → 5 = Business Critical). (3) Mark your Top 10 priority competencies using the checkbox. (4) Set the minimum required Day-1 proficiency level. (5) Click <strong>Submit Response</strong> to save your inputs.</span>
+    </div>
+  </div>
+
+  <div class="form-section">
+    <div class="form-section-header"><div class="form-section-num">A</div><div><h4>Respondent Information</h4><small>Please fill all fields before proceeding</small></div></div>
+    <div class="g3">
+      <div><label>Full Name</label><input type="text" id="fh-name" placeholder="Your full name"></div>
+      <div><label>Designation</label><input type="text" id="fh-desig" placeholder="e.g., Head of Manufacturing"></div>
+      <div><label>Date</label><input type="text" id="fh-date" placeholder="DD / MM / YYYY"></div>
+    </div>
+    <div class="g2" style="margin-top:12px">
+      <div>
+        <label>Programme Type</label>
+        <select id="fhq-type" onchange="onFHQTypeChange()">
+          <option value="GET">GET — Graduate Engineer Trainee</option>
+          <option value="MT">MT — Management Trainee</option>
+        </select>
+      </div>
+      <div><label>Your Department / Function</label><select id="fhq-role" onchange="renderFHQ()"></select></div>
+    </div>
+  </div>
+
+  <div class="form-section">
+    <div class="form-section-header"><div class="form-section-num">B</div><div><h4>Competency Prioritisation</h4><small>Rate importance, select Top 10, and set Day-1 level</small></div></div>
+    <div style="display:grid;grid-template-columns:2fr 80px 100px 90px;gap:10px;padding:6px 12px;background:var(--g100);border-radius:var(--radius-xs);margin-bottom:8px">
+      <small style="font-weight:600;color:var(--g600)">Competency</small>
+      <small style="font-weight:600;color:var(--g600);text-align:center">Importance<br>(1–5 ★)</small>
+      <small style="font-weight:600;color:var(--g600);text-align:center">Top 10<br>(Select ✓)</small>
+      <small style="font-weight:600;color:var(--g600);text-align:center">Min Day-1<br>Level</small>
+    </div>
+    <div id="fhq-container"></div>
+    <div id="fhq-top10-counter" style="margin-top:8px"></div>
+  </div>
+
+  <div class="form-section">
+    <div class="form-section-header"><div class="form-section-num">C</div><div><h4>Open-Ended Questions</h4><small>Optional but highly encouraged</small></div></div>
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <div><label>Q1. Which single competency is most critical for a trainee in your function within the first 30 days? Why?</label><textarea id="fh-q1" placeholder="Your answer..."></textarea></div>
+      <div><label>Q2. What is the biggest competency gap risk you foresee from campus-hired trainees in your function?</label><textarea id="fh-q2" placeholder="Your answer..."></textarea></div>
+      <div><label>Q3. Are there any EV-specific certifications or mandatory clearances (e.g., HV Safety) required before deployment?</label><textarea id="fh-q3" placeholder="Your answer..."></textarea></div>
+      <div><label>Q4. Suggest a theme or problem statement for the 2-month Action Learning Project for trainees in your function.</label><textarea id="fh-q4" placeholder="Your answer..."></textarea></div>
+    </div>
+  </div>
+
+  <div class="sticky-bar">
+    <div class="top10-counter">Top 10 selected: <span id="fhq-top10-count">0</span> / 10</div>
+    <div style="display:flex;gap:8px">
+      <button class="btn btn-ghost btn-sm" onclick="clearFHQ()">Clear Form</button>
+      <button class="btn btn-accent" onclick="submitFHQ()">✓ Submit & Save Response</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════ TAB: SELF-ASSESSMENT -->
+<div id="tab-sa" class="tab">
+  <div class="card">
+    <h2>Trainee Self-Assessment Form</h2>
+    <p>Rate your <strong>current proficiency</strong> honestly against each competency for your function. This is used to build your Individual Development Plan (IDP) and is <em>not</em> linked to your appraisal or performance rating. Your manager will validate these scores at the 30-day mark.</p>
+    <div class="alert alert-warn" style="margin-top:12px">
+      <span>⚠️</span><span><strong>Note:</strong> Be honest. Inflated self-ratings will result in misaligned development plans and gaps not addressed early enough. The purpose is to <em>support</em> your growth, not evaluate performance.</span>
+    </div>
+  </div>
+
+  <div class="form-section">
+    <div class="form-section-header"><div class="form-section-num">A</div><div><h4>Trainee Information</h4></div></div>
+    <div class="g3">
+      <div><label>Full Name</label><input type="text" id="sa-name" placeholder="Your full name"></div>
+      <div><label>Employee / Trainee ID</label><input type="text" id="sa-id" placeholder="e.g., GET-001"></div>
+      <div><label>Date of Joining</label><input type="text" id="sa-doj" placeholder="DD / MM / YYYY"></div>
+    </div>
+    <div class="g2" style="margin-top:12px">
+      <div><label>Programme Type</label><select id="sa-type" onchange="onSATypeChange()"><option value="GET">GET — Graduate Engineer Trainee</option><option value="MT">MT — Management Trainee</option></select></div>
+      <div><label>Your Department / Function</label><select id="sa-role" onchange="renderSA()"></select></div>
+    </div>
+  </div>
+
+  <div class="card card-sm" style="margin-bottom:14px">
+    <div class="prof-scale">
+      <div class="prof-level pl-1"><span class="pl-num">1</span><span class="pl-lbl">Awareness</span></div>
+      <div class="prof-level pl-2"><span class="pl-num">2</span><span class="pl-lbl">Basic</span></div>
+      <div class="prof-level pl-3"><span class="pl-num">3</span><span class="pl-lbl">Practitioner</span></div>
+      <div class="prof-level pl-4"><span class="pl-num">4</span><span class="pl-lbl">Advanced</span></div>
+      <div class="prof-level pl-5"><span class="pl-num">5</span><span class="pl-lbl">Expert</span></div>
+    </div>
+  </div>
+
+  <div class="form-section">
+    <div class="form-section-header"><div class="form-section-num">B</div><div><h4>Proficiency Self-Rating</h4><small>Rate your current level for each competency. Add a brief evidence note where possible.</small></div></div>
+    <div style="display:grid;grid-template-columns:2fr 160px 1fr;gap:10px;padding:6px 12px;background:var(--g100);border-radius:var(--radius-xs);margin-bottom:8px">
+      <small style="font-weight:600;color:var(--g600)">Competency</small>
+      <small style="font-weight:600;color:var(--g600);text-align:center">Current Level (1–5)</small>
+      <small style="font-weight:600;color:var(--g600)">Brief Evidence / Context</small>
+    </div>
+    <div id="sa-container"></div>
+  </div>
+
+  <div class="form-section">
+    <div class="form-section-header"><div class="form-section-num">C</div><div><h4>Reflection Questions</h4><small>Help us understand your learning goals</small></div></div>
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <div><label>Q1. Which 3 competencies do you feel most confident about? Provide a brief example from your academic or internship experience.</label><textarea id="sa-q1" placeholder="Your answer..."></textarea></div>
+      <div><label>Q2. Which 3 competencies do you most want to develop in your first 3 months at JSW Motors?</label><textarea id="sa-q2" placeholder="Your answer..."></textarea></div>
+      <div><label>Q3. What is one EV or automotive topic you are most excited to learn about at JSW Motors?</label><textarea id="sa-q3" placeholder="Your answer..."></textarea></div>
+      <div><label>Q4. What is your 12-month career goal at JSW Motors?</label><textarea id="sa-q4" placeholder="Your answer..."></textarea></div>
+    </div>
+  </div>
+
+  <div class="sticky-bar">
+    <div class="top10-counter">Completion: <span id="sa-completion">0%</span></div>
+    <div style="display:flex;gap:8px">
+      <button class="btn btn-ghost btn-sm" onclick="clearSA()">Clear Form</button>
+      <button class="btn btn-primary" onclick="submitSA()">✓ Submit Self-Assessment</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════ TAB: GAP ANALYSIS -->
+<div id="tab-gap" class="tab">
+  <div class="card">
+    <h2>Competency Gap Analysis</h2>
+    <p>The gap is calculated as <strong>Desired Level (set by functional head) − Current Level (self-assessed by trainee)</strong>. Adjust the sliders to reflect actual proficiency scores. Gaps auto-classify and drive the TNA recommendations.</p>
+    <div style="display:flex;gap:12px;margin-top:16px;flex-wrap:wrap">
+      <div style="flex:1;min-width:140px"><label>Programme Type</label><select id="gap-type" onchange="onGapTypeChange()"><option value="GET">GET</option><option value="MT">MT</option></select></div>
+      <div style="flex:2;min-width:200px"><label>Department</label><select id="gap-role" onchange="renderGap()"></select></div>
+      <div style="flex:1;min-width:140px"><label>Trainee Name (optional)</label><input type="text" id="gap-trainee" placeholder="For individual view" oninput="renderGap()"></div>
+    </div>
+  </div>
+
+  <div class="stats-bar" id="gap-stats">
+    <div class="stat-box"><div class="stat-num" id="gs-crit" style="color:var(--red)">—</div><div class="stat-lbl">Critical (≥3)</div></div>
+    <div class="stat-box"><div class="stat-num" id="gs-mod" style="color:var(--ora)">—</div><div class="stat-lbl">Moderate (=2)</div></div>
+    <div class="stat-box"><div class="stat-num" id="gs-min" style="color:var(--amb)">—</div><div class="stat-lbl">Minor (=1)</div></div>
+    <div class="stat-box"><div class="stat-num" id="gs-none" style="color:var(--grn)">—</div><div class="stat-lbl">Criteria Met (0)</div></div>
+    <div class="stat-box"><div class="stat-num" id="gs-avg" style="color:var(--jsw3)">—</div><div class="stat-lbl">Avg Gap Score</div></div>
+  </div>
+
+  <div style="background:var(--g50);border-radius:var(--radius);border:1px solid var(--g200);padding:14px;margin-bottom:16px">
+    <div class="gap-hdr"><span>Competency</span><span style="text-align:center">Required<br>Level</span><span style="text-align:center">Current Level (adjust slider)</span><span style="text-align:center">Gap</span><span style="text-align:center">Severity</span></div>
+    <div id="gap-container"></div>
+  </div>
+
+  <div style="display:flex;gap:10px;justify-content:flex-end">
+    <button class="btn btn-outline" onclick="generateTNA()">→ Generate TNA from Gaps</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════ TAB: TNA -->
+<div id="tab-tna" class="tab">
+  <div class="card">
+    <h2>Training Needs Analysis & Learning Pathways</h2>
+    <p>The TNA translates gap analysis outputs into targeted learning interventions, aligned to the 6-phase GET & MT programme structure. All training follows the 70-20-10 learning model: 70% on-the-job experience, 20% mentoring and peer learning, 10% formal classroom or LMS-based training.</p>
+  </div>
+
+  <!-- Gap severity → Training trigger table -->
+  <div class="card">
+    <h3 style="margin-bottom:14px">Gap Score Interpretation & Training Triggers</h3>
+    <div style="overflow-x:auto">
+    <table style="width:100%;border-collapse:collapse;font-size:12px">
+      <thead>
+        <tr style="background:var(--jsw);color:#fff">
+          <th style="padding:10px 12px;text-align:left;border-radius:8px 0 0 0">Gap Score</th>
+          <th style="padding:10px 12px;text-align:left">Severity</th>
+          <th style="padding:10px 12px;text-align:left">Meaning</th>
+          <th style="padding:10px 12px;text-align:left">Urgency</th>
+          <th style="padding:10px 12px;text-align:left">Training Mode</th>
+          <th style="padding:10px 12px;text-align:left;border-radius:0 8px 0 0">IDP Action</th>
+        </tr>
+      </thead>
+      <tbody id="tna-interp-table"></tbody>
+    </table>
+    </div>
+  </div>
+
+  <!-- Auto TNA output -->
+  <div id="tna-auto" style="display:none">
+    <div class="alert alert-success"><span>✓</span><span id="tna-auto-label"></span></div>
+    <div id="tna-auto-content"></div>
+  </div>
+
+  <!-- 6-Phase Learning Pathway -->
+  <div class="card">
+    <h3 style="margin-bottom:16px">6-Phase Structured Learning Pathway — GET & MT Programme</h3>
+    <div class="learning-phases" id="lp-phases"></div>
+  </div>
+
+  <!-- Training Module Design -->
+  <div class="card">
+    <h3 style="margin-bottom:4px">Training Module Design — By Phase & Gap Severity</h3>
+    <p style="margin-bottom:16px">Each module is mapped to a specific learning phase, gap trigger, delivery method, and Kirkpatrick evaluation approach.</p>
+    <div id="tna-modules"></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════ TAB: DASHBOARD -->
+<div id="tab-dashboard" class="tab">
+  <div class="card">
+    <h2>Response Dashboard</h2>
+    <p>Aggregated view of all submitted Functional Head Questionnaire responses and Self-Assessments. Use this to identify cohort-wide competency priorities and inform the final competency heat map for leadership review.</p>
+    <div style="display:flex;gap:8px;margin-top:12px">
+      <button class="btn btn-ghost btn-sm" onclick="loadDashboard()">🔄 Refresh</button>
+      <button class="btn btn-ghost btn-sm" onclick="clearAllResponses()">🗑 Clear All Responses</button>
+      <button class="btn btn-outline btn-sm" onclick="exportDashboard()">↓ Export Summary</button>
+    </div>
+  </div>
+
+  <div class="g2" style="margin-bottom:16px">
+    <div class="stat-box" style="border-radius:var(--radius)">
+      <div class="stat-num" id="dash-fh-count" style="color:var(--jsw)">0</div>
+      <div class="stat-lbl">Functional Head Responses</div>
+    </div>
+    <div class="stat-box" style="border-radius:var(--radius)">
+      <div class="stat-num" id="dash-sa-count" style="color:var(--ev)">0</div>
+      <div class="stat-lbl">Self-Assessment Responses</div>
+    </div>
+  </div>
+
+  <div class="section-divider"><div class="section-divider-text">Functional Head Responses</div></div>
+  <div id="dash-fh-list"></div>
+
+  <div class="section-divider"><div class="section-divider-text">Self-Assessment Responses</div></div>
+  <div id="dash-sa-list"></div>
+
+  <div class="section-divider"><div class="section-divider-text">Top Competency Priorities (Aggregated)</div></div>
+  <div id="dash-agg"></div>
+</div>
+
+</div><!-- /main -->
+
+<script>
+// ═══════════════════════════════════════════════════════════════════════════════
+// DATA
+// ═══════════════════════════════════════════════════════════════════════════════
+const PL = ['','Awareness','Basic','Practitioner','Advanced','Expert'];
+
+const COMPS = {
+  GET:{
+    manufacturing:{label:"Manufacturing",headcount:54,wave:"July 2026 (Wave 1) + Aug 2026 (Wave 2)",comps:[
+      {n:"EV Assembly Process & Line Operations",cat:"Technical",ev:true,d1:2,desc:"Understanding of EV assembly sequence, line balancing, takt time, station layouts and material flow in a greenfield EV plant."},
+      {n:"High Voltage (HV) Safety & Battery Handling",cat:"Technical",ev:true,d1:3,desc:"HV system awareness, PPE for EV, lockout/tagout on HV lines, Li-ion battery safe handling and storage. MANDATORY Day-1 certification."},
+      {n:"IATF 16949 Quality Awareness",cat:"Technical",ev:true,d1:2,desc:"Automotive quality management system fundamentals, quality gates, non-conformance handling. Core automotive QMS standard."},
+      {n:"5S Workplace Organisation & Visual Management",cat:"Technical",ev:false,d1:2,desc:"Sort, Set-in-order, Shine, Standardize, Sustain; daily 5S practice and visual controls on the shop floor."},
+      {n:"Lean Manufacturing & Waste Elimination",cat:"Technical",ev:false,d1:2,desc:"Understanding of 7 wastes (muda), value stream concept, flow basics, Kaizen participation."},
+      {n:"Blueprint & Work Instruction Reading",cat:"Technical",ev:false,d1:2,desc:"Read engineering drawings, BOMs, assembly work instructions, torque specifications and part identification."},
+      {n:"EV Powertrain Component Awareness",cat:"Technical",ev:true,d1:2,desc:"Motor, inverter, battery pack, BMS functions and integration architecture in a battery electric vehicle."},
+      {n:"Dimensional & Visual Inspection",cat:"Technical",ev:false,d1:2,desc:"Go/no-go gauges, visual defect identification, basic measuring tools, SOP adherence at quality gates."},
+      {n:"SAP / ERP Navigation",cat:"Technical",ev:false,d1:1,desc:"Basic SAP navigation for production orders, material movements (GR/GI), shift reporting and downtime logging."},
+      {n:"Total Productive Maintenance Basics",cat:"Technical",ev:false,d1:1,desc:"8-pillar TPM awareness, OEE concept, autonomous maintenance basics for line ownership."},
+      {n:"DELMIA / Digital Work Instruction Awareness",cat:"Technical",ev:true,d1:1,desc:"Awareness of digital work instruction systems, AR-guided assembly concepts and digital manufacturing tools."},
+      {n:"Production Planning & Scheduling Basics",cat:"Technical",ev:false,d1:1,desc:"Daily production plans, schedule adherence tracking, MPS basics, takt time understanding."},
+      {n:"Ergonomics & Occupational Safety",cat:"Technical",ev:false,d1:3,desc:"LOTO procedures, PPE usage, ergonomic posture, hazard identification, incident reporting per ISO 45001."},
+      {n:"Root Cause Analysis (8D / 5-Why)",cat:"Technical",ev:false,d1:1,desc:"Basic structured problem-solving tools — 5-Why, fishbone — for escalating and investigating defects."},
+      {n:"Attention to Detail & Process Discipline",cat:"Behavioral",ev:false,d1:3,desc:"Precision in task execution; consistently following defined processes without shortcuts or deviations."},
+      {n:"Safety-First Mindset",cat:"Behavioral",ev:false,d1:3,desc:"Proactive hazard identification, near-miss reporting, speaking up on safety. Non-negotiable at EV plant."},
+      {n:"Teamwork & Shift Communication",cat:"Behavioral",ev:false,d1:2,desc:"Effective collaboration in shift teams, structured handover communication, shared accountability."},
+      {n:"Learning Agility & Curiosity",cat:"Behavioral",ev:false,d1:2,desc:"Openness to new EV manufacturing concepts; willingness to unlearn traditional automotive habits."},
+      {n:"Problem Identification & Escalation",cat:"Behavioral",ev:false,d1:2,desc:"Detecting quality or process issues early; escalating through the correct channel without delay."},
+      {n:"Accountability & Ownership",cat:"Behavioral",ev:false,d1:2,desc:"Taking ownership of assigned station tasks; not deflecting responsibility when issues arise."}
+    ]},
+    engineering:{label:"Engineering",headcount:32,wave:"July 2026 (Wave 1)",comps:[
+      {n:"EV Powertrain & Architecture (BEV/HEV/FCEV)",cat:"Technical",ev:true,d1:2,desc:"EV drivetrain components: motor, inverter, battery pack, BMS, charging system, e-axle and system integration."},
+      {n:"DELMIA / Digital Manufacturing Simulation",cat:"Technical",ev:true,d1:2,desc:"Dassault DELMIA for process planning, virtual commissioning, work instruction authoring and manufacturing simulation."},
+      {n:"CAD Tools (CATIA / SolidWorks / AutoCAD)",cat:"Technical",ev:false,d1:2,desc:"3D modelling, drawing creation, geometric tolerance and BOMs. Core engineering competency."},
+      {n:"PFMEA & Process FMEA Development",cat:"Technical",ev:false,d1:2,desc:"Failure Mode & Effects Analysis for process design; RPN calculation; link to control plan."},
+      {n:"Statistical Process Control (SPC & Cpk)",cat:"Technical",ev:false,d1:2,desc:"Control charts, process capability indices (Cp, Cpk), data-driven process decisions."},
+      {n:"IATF 16949 Process Requirements (APQP/PPAP)",cat:"Technical",ev:true,d1:2,desc:"Process qualification, MSA, PPAP submission, IATF audit readiness for engineering deliverables."},
+      {n:"GD&T & Engineering Drawing Interpretation",cat:"Technical",ev:false,d1:2,desc:"Geometric Dimensioning & Tolerancing, tolerance stack-up, feature interpretation from drawings."},
+      {n:"Manufacturing Process Engineering",cat:"Technical",ev:false,d1:2,desc:"Process flow development, routing sheets, time studies, line balancing, cycle time optimisation."},
+      {n:"Lean & Kaizen Methodology",cat:"Technical",ev:false,d1:2,desc:"Value stream mapping, Kaizen facilitation, waste reduction, standardised work design."},
+      {n:"Battery Module Manufacturing Processes",cat:"Technical",ev:true,d1:2,desc:"Cell stacking, module assembly, welding processes, HV safety in battery manufacturing. Skill Lync EV Bootcamp."},
+      {n:"Functional Safety Awareness (ISO 26262)",cat:"Technical",ev:true,d1:1,desc:"Functional safety requirements for EV, ASIL ratings, how ISO 26262 links to product engineering decisions."},
+      {n:"Manufacturing Automation & Robotics Basics",cat:"Technical",ev:false,d1:1,desc:"Industrial robot basics, automated line awareness, Industry 4.0 sensor integration concepts."},
+      {n:"DFM / DFA Principles",cat:"Technical",ev:false,d1:1,desc:"Design for Manufacturability and Assembly guidelines; feedback loop from engineering to design teams."},
+      {n:"Data Analysis & Engineering Analytics (Excel/Python)",cat:"Technical",ev:false,d1:2,desc:"Process data analysis, capability studies, Excel-based engineering reporting and decision-making."},
+      {n:"SAP / ERP Basic Navigation",cat:"Technical",ev:false,d1:1,desc:"SAP navigation for production orders, material data, process routing maintenance."},
+      {n:"Analytical & Problem Solving (8D / A3)",cat:"Behavioral",ev:false,d1:3,desc:"8D, 5-Why, A3 analysis for root cause resolution. Critical thinking applied to engineering problems."},
+      {n:"Cross-Functional Collaboration",cat:"Behavioral",ev:false,d1:2,desc:"Working effectively with Manufacturing, Quality, Procurement, and Shop-floor teams."},
+      {n:"Technical Communication & Presentation",cat:"Behavioral",ev:false,d1:2,desc:"Presenting process data, writing engineering reports, stakeholder update communication."},
+      {n:"Continuous Improvement Mindset",cat:"Behavioral",ev:false,d1:2,desc:"Proactively identifying improvement opportunities; Kaizen thinking applied daily."},
+      {n:"Project Management Basics",cat:"Behavioral",ev:false,d1:2,desc:"Task planning, milestone tracking, prioritisation, deadline management in engineering projects."}
+    ]},
+    procurement:{label:"Procurement",headcount:17,wave:"July 2026 (Wave 1) + Aug 2026",comps:[
+      {n:"Should-Costing & Cost Breakdown Analysis",cat:"Technical",ev:false,d1:2,desc:"Cost build-up models: material + labour + overhead + profit. Cost driver analysis for automotive components."},
+      {n:"Vendor Evaluation & Supplier Qualification",cat:"Technical",ev:false,d1:2,desc:"Supplier qualification process, PPAP/PSW requirements, audit criteria, supplier performance tracking."},
+      {n:"SAP MM / ERP Purchase Order Management",cat:"Technical",ev:false,d1:2,desc:"SAP MM: purchase requisitions, POs, GRN process, vendor master management."},
+      {n:"Supply Chain Fundamentals & Incoterms",cat:"Technical",ev:false,d1:1,desc:"Procurement-to-pay cycle, incoterms, lead time management, freight modes, customs documentation basics."},
+      {n:"Negotiation Fundamentals",cat:"Behavioral",ev:false,d1:2,desc:"Basic supplier negotiations on price, payment terms, delivery schedules and quality commitments."},
+      {n:"Bill of Materials (BOM) & Material Management",cat:"Technical",ev:false,d1:2,desc:"Multi-level BOM reading, material classifications, ABC analysis and inventory management basics."},
+      {n:"Supplier Quality & Incoming Inspection",cat:"Technical",ev:false,d1:1,desc:"Incoming quality inspection, rejection handling, SCAR process and supplier corrective action."},
+      {n:"EV Component & Technology Awareness",cat:"Technical",ev:true,d1:1,desc:"Key EV components being procured (cells, BMS, motors, inverters) and their technical specifications and supply base."},
+      {n:"Spend Analytics & Procurement Reporting (Excel)",cat:"Technical",ev:false,d1:2,desc:"Spend analysis, price benchmarking, supplier scorecards and procurement KPI reporting in Excel."},
+      {n:"Contract Basics & Commercial Terms",cat:"Technical",ev:false,d1:1,desc:"Purchase contract elements, standard commercial terms, liability clauses and payment terms."},
+      {n:"Global Sourcing Awareness",cat:"Technical",ev:false,d1:1,desc:"International supplier qualification basics, landed cost calculation, import documentation awareness."},
+      {n:"Total Cost of Ownership (TCO) Analysis",cat:"Technical",ev:false,d1:1,desc:"Acquisition + operating + disposal cost analysis; TCO vs unit price for sourcing decisions."},
+      {n:"Sustainable & Responsible Procurement",cat:"Technical",ev:false,d1:1,desc:"Environmental criteria in supplier selection, conflict minerals, ESG in procurement basics."},
+      {n:"Risk Management in Procurement",cat:"Technical",ev:false,d1:1,desc:"Single-source risk, geopolitical supply risk, supply disruption mitigation strategies."},
+      {n:"Commercial Acumen",cat:"Behavioral",ev:false,d1:2,desc:"Understanding cost structure and profit impact of procurement decisions; business-oriented thinking."},
+      {n:"Analytical Thinking & Data Literacy",cat:"Behavioral",ev:false,d1:2,desc:"Data-driven approach to procurement decisions; Excel and Power BI proficiency."},
+      {n:"Relationship Building",cat:"Behavioral",ev:false,d1:2,desc:"Long-term supplier partnerships; trust-based stakeholder relationships."},
+      {n:"Ethical Standards & Integrity",cat:"Behavioral",ev:false,d1:3,desc:"Maintaining objectivity in supplier selection; avoiding conflicts of interest; transparent dealing."},
+      {n:"Communication & Stakeholder Management",cat:"Behavioral",ev:false,d1:2,desc:"Clear communication with suppliers and internal stakeholders; written and verbal proficiency."},
+      {n:"Initiative & Ownership",cat:"Behavioral",ev:false,d1:2,desc:"Taking ownership of procurement tasks; proactively flagging supply risks and cost issues."}
+    ]},
+    quality:{label:"Quality",headcount:4,wave:"July 2026 (Wave 1)",comps:[
+      {n:"IATF 16949 Standard Requirements",cat:"Technical",ev:true,d1:3,desc:"Core automotive QMS standard — all 10 clauses, process approach, customer focus, audit. MANDATORY."},
+      {n:"Control Plan Development & Maintenance",cat:"Technical",ev:false,d1:2,desc:"Characteristic identification, control method, measurement tools, reaction plans and living document upkeep."},
+      {n:"Statistical Process Control (SPC)",cat:"Technical",ev:false,d1:2,desc:"Control charts (X-bar, R, Np), capability indices (Cp, Cpk), data-driven production decisions."},
+      {n:"Measurement System Analysis (MSA / Gauge R&R)",cat:"Technical",ev:false,d1:2,desc:"Gauge R&R studies, linearity, bias; interpreting MSA results for inspection equipment qualification."},
+      {n:"PPAP Process & Customer Submission",cat:"Technical",ev:false,d1:2,desc:"18-element PPAP, PSW preparation, submission to customer, records control."},
+      {n:"8D Problem Solving & CAPA",cat:"Technical",ev:false,d1:2,desc:"Team 8D for structured problem resolution; D1–D8 methodology; corrective and preventive action."},
+      {n:"Dimensional Inspection (CMM / GD&T)",cat:"Technical",ev:false,d1:2,desc:"CMM basics, gauging, surface plate inspection, GD&T application in quality decisions."},
+      {n:"EV Battery Quality Parameters",cat:"Technical",ev:true,d1:2,desc:"HV insulation resistance testing, battery capacity, cell grading, IP rating checks, thermal management QC."},
+      {n:"FMEA Participation & Review",cat:"Technical",ev:false,d1:2,desc:"Contributing to Process FMEA, risk prioritisation by RPN, linking FMEA to control plan."},
+      {n:"Internal Audit Techniques (Process / Product)",cat:"Technical",ev:false,d1:1,desc:"Process audit, product audit, system audit; checklist creation, NCR issuance and closure tracking."},
+      {n:"Supplier Quality Evaluation (SCAR / PPAP)",cat:"Technical",ev:false,d1:1,desc:"Supplier audit basics, SCAR process, qualification criteria and incoming quality performance."},
+      {n:"First Article Inspection (FAI)",cat:"Technical",ev:false,d1:2,desc:"FAI planning and execution; dimensional report, material certification, functional verification."},
+      {n:"Non-Conformance Management (NCR)",cat:"Technical",ev:false,d1:2,desc:"NCR issuance, containment actions, disposition decisions, closure and record maintenance."},
+      {n:"Quality Data Analysis & Reporting",cat:"Technical",ev:false,d1:2,desc:"Quality MIS, defect Pareto, PPM reporting, first-pass yield and customer scorecard maintenance."},
+      {n:"Root Cause Analysis (Fishbone / 5-Why / FTA)",cat:"Technical",ev:false,d1:2,desc:"Systematic root cause investigation using fishbone, 5-Why and fault tree analysis."},
+      {n:"Attention to Detail & Precision",cat:"Behavioral",ev:false,d1:3,desc:"Exactness in recording measurements, observations and documentation. Zero-defect mindset."},
+      {n:"Assertiveness in Quality Escalation",cat:"Behavioral",ev:false,d1:2,desc:"Confidence to halt production, issue NCRs and escalate non-compliance through correct channels."},
+      {n:"Data-Driven Decision Making",cat:"Behavioral",ev:false,d1:3,desc:"Relying on facts and data over intuition; structured analysis before action."},
+      {n:"Compliance Mindset",cat:"Behavioral",ev:false,d1:3,desc:"Internalised belief in following standards, customer requirements and internal procedures."},
+      {n:"Cross-Functional Communication",cat:"Behavioral",ev:false,d1:2,desc:"Explaining quality issues clearly to Engineering, Production and Supplier teams."}
+    ]},
+    it_digital:{label:"IT & Digital",headcount:7,wave:"July 2026 (Wave 1)",comps:[
+      {n:"SAP / ERP Systems (Core Modules)",cat:"Technical",ev:false,d1:2,desc:"SAP module navigation (MM, PP, FI, SD) relevant to manufacturing and operations; basic transactions."},
+      {n:"Python / Programming Fundamentals",cat:"Technical",ev:false,d1:2,desc:"Python scripting for data manipulation, automation tasks and basic API integrations."},
+      {n:"Data Analytics & Power BI / Tableau",cat:"Technical",ev:false,d1:2,desc:"Power BI dashboard design, DAX measures, data source connections, management insights reporting."},
+      {n:"Digital Manufacturing & Industry 4.0",cat:"Technical",ev:true,d1:2,desc:"IIoT, smart factory, digital twin, MES/SCADA systems and their application in automotive manufacturing."},
+      {n:"SQL & Database Fundamentals",cat:"Technical",ev:false,d1:2,desc:"SQL queries (SELECT, JOIN, GROUP BY) for data retrieval and reporting from relational databases."},
+      {n:"PLM / DELMIA Digital Twin Awareness",cat:"Technical",ev:true,d1:2,desc:"Product Lifecycle Management, DELMIA digital plant simulation, CAD-PLM integration concepts."},
+      {n:"Cybersecurity & Data Privacy Basics",cat:"Technical",ev:false,d1:2,desc:"Cybersecurity risks, IT Act / GDPR awareness, access control and secure data handling practices."},
+      {n:"Cloud Computing Platforms (Azure / AWS)",cat:"Technical",ev:false,d1:1,desc:"Cloud service models (IaaS / PaaS / SaaS), Azure / AWS basics, cloud migration awareness."},
+      {n:"Software Development Lifecycle (SDLC)",cat:"Technical",ev:false,d1:2,desc:"Requirements, design, develop, test, deploy, maintain phases. Agile / Scrum awareness."},
+      {n:"IoT & Connected Manufacturing",cat:"Technical",ev:true,d1:1,desc:"Sensor networks, edge computing, real-time shop floor data collection and analytics."},
+      {n:"AI / ML in Manufacturing Basics",cat:"Technical",ev:true,d1:1,desc:"Predictive maintenance, defect detection, demand sensing using machine learning concepts."},
+      {n:"IT Project Coordination",cat:"Technical",ev:false,d1:2,desc:"Coordinating IT project tasks, managing stakeholder communication, preparing project status reports."},
+      {n:"Advanced Excel & Analytics",cat:"Technical",ev:false,d1:2,desc:"Pivot Tables, VLOOKUP, advanced formulas, Power Query for data management and manufacturing reporting."},
+      {n:"IT Infrastructure Basics",cat:"Technical",ev:false,d1:1,desc:"Network, server, endpoint management; ITIL service management awareness for IT support."},
+      {n:"Vendor & Technology Evaluation",cat:"Technical",ev:false,d1:1,desc:"RFP for IT systems, vendor scoring, proof-of-concept management, TCO analysis."},
+      {n:"Problem-Solving & Logical Thinking",cat:"Behavioral",ev:false,d1:3,desc:"Systematic debugging, root cause analysis for IT issues, hypothesis-based fault isolation."},
+      {n:"IT-Business Alignment",cat:"Behavioral",ev:false,d1:2,desc:"Understanding business requirements and translating them into effective IT solutions."},
+      {n:"Continuous Learning & Tech Agility",cat:"Behavioral",ev:false,d1:3,desc:"Self-driven upskilling on emerging technologies; staying current with technology trends."},
+      {n:"Communication with Non-Technical Stakeholders",cat:"Behavioral",ev:false,d1:2,desc:"Explaining complex IT concepts clearly to non-IT business users and leaders."},
+      {n:"Collaboration & Cross-Team Working",cat:"Behavioral",ev:false,d1:2,desc:"Working across IT, Operations, Finance and HR teams for digital transformation objectives."}
+    ]},
+    sales_marketing:{label:"Sales & Marketing",headcount:5,wave:"July 2026 (Wave 1) + Aug 2026",comps:[
+      {n:"EV Product Knowledge & USP Communication",cat:"Technical",ev:true,d1:2,desc:"Knowledge of JSW Motors EV product lineup, technical specifications, USPs vs competitors and customer value articulation."},
+      {n:"Sales Process & Pipeline Management",cat:"Technical",ev:false,d1:2,desc:"B2B/B2C sales funnel, lead qualification, opportunity management, closing techniques and pipeline reporting."},
+      {n:"CRM Tools & Data Management",cat:"Technical",ev:false,d1:1,desc:"CRM tools (Salesforce / Zoho or proprietary) for lead tracking, customer records, activity logging."},
+      {n:"EV Market & Regulatory Landscape (FAME / PLI)",cat:"Technical",ev:true,d1:2,desc:"India EV market trends, FAME II, PLI scheme, competitor products, customer adoption drivers and barriers."},
+      {n:"Market Research & Competitive Intelligence",cat:"Technical",ev:false,d1:2,desc:"Market surveys, competitor analysis, pricing benchmarking, synthesising insights for sales strategy."},
+      {n:"Presentation, Communication & Storytelling",cat:"Behavioral",ev:false,d1:2,desc:"Compelling sales presentations, product demos, pitches and dealer briefings."},
+      {n:"Digital Marketing Fundamentals",cat:"Technical",ev:false,d1:1,desc:"Digital marketing channels (SEO, SEM, social media, email), content basics and analytics."},
+      {n:"Negotiation & Objection Handling",cat:"Behavioral",ev:false,d1:2,desc:"Negotiating pricing and terms with channel partners; handling common customer objections."},
+      {n:"Channel & Dealer Management Basics",cat:"Technical",ev:false,d1:1,desc:"Automotive dealership structure, dealer appointment process, MoU basics and dealer performance management."},
+      {n:"Sales Analytics & Reporting",cat:"Technical",ev:false,d1:1,desc:"Sales MIS reports, territory analysis, conversion metrics, monthly forecasts and variance commentary."},
+      {n:"Customer Relationship Building",cat:"Behavioral",ev:false,d1:2,desc:"Building and maintaining customer relationships, managing queries, ensuring customer satisfaction."},
+      {n:"Revenue & P&L Awareness",cat:"Technical",ev:false,d1:1,desc:"P&L structure basics, revenue recognition, contribution margin, break-even for sales decisions."},
+      {n:"Brand Awareness & Corporate Communication",cat:"Technical",ev:false,d1:1,desc:"JSW Motors brand guidelines, brand voice, key messaging and consistent brand representation."},
+      {n:"Social Media & Content Basics",cat:"Technical",ev:false,d1:1,desc:"Social media content creation, platform management basics, community engagement fundamentals."},
+      {n:"Time Management & Territory Planning",cat:"Behavioral",ev:false,d1:2,desc:"Planning and managing sales visits, leads and follow-up activities across territory efficiently."},
+      {n:"Customer Orientation & Service Mindset",cat:"Behavioral",ev:false,d1:3,desc:"Genuine focus on understanding and meeting customer needs; service-first mindset in all interactions."},
+      {n:"Resilience & Handling Rejection",cat:"Behavioral",ev:false,d1:2,desc:"Maintaining motivation after setbacks; treating rejection as learning and iterating approach."},
+      {n:"Analytical Thinking",cat:"Behavioral",ev:false,d1:2,desc:"Using data to prioritise leads, understand conversion, and make territory planning decisions."},
+      {n:"Professional Ethics & Integrity",cat:"Behavioral",ev:false,d1:3,desc:"Honest, transparent interactions with customers and dealers; no misrepresentation of product."},
+      {n:"Initiative & Self-Driven Learning",cat:"Behavioral",ev:false,d1:2,desc:"Proactively learning about EV technology and market without waiting to be directed."}
+    ]}
+  },
+  MT:{
+    s_and_m:{label:"Sales & Marketing",headcount:24,wave:"April 2026 (April End) + May–Aug 2026",comps:[
+      {n:"Sales Strategy & Go-to-Market Planning",cat:"Technical",ev:false,d1:2,desc:"Designing territory sales plans, setting KPIs, identifying segments and developing GTM strategies for EV products."},
+      {n:"EV Market Intelligence & Competitive Landscape",cat:"Technical",ev:true,d1:2,desc:"India EV market trends, FAME II / PLI policy, competitor product benchmarking and customer adoption barriers."},
+      {n:"CRM Analytics & Sales Operations",cat:"Technical",ev:false,d1:2,desc:"CRM platform proficiency, pipeline analytics, win-loss analysis, conversion optimisation and reporting."},
+      {n:"Brand Management & Positioning",cat:"Technical",ev:false,d1:1,desc:"Brand architecture, brand building in EV space, positioning strategy and brand equity measurement."},
+      {n:"Market Research & Consumer Insights",cat:"Technical",ev:false,d1:2,desc:"Designing and executing market studies, analysing consumer behaviour, deriving actionable insights."},
+      {n:"Digital Marketing Strategy (SEO / SEM / Social)",cat:"Technical",ev:false,d1:2,desc:"Planning and managing digital campaigns, performance marketing, social media calendar and analytics."},
+      {n:"Channel & Dealer Network Management",cat:"Technical",ev:false,d1:2,desc:"Automotive dealer network, dealer financial viability, appointment process, performance dashboards."},
+      {n:"Revenue & P&L Management",cat:"Technical",ev:false,d1:2,desc:"P&L structure, revenue recognition, contribution margin, break-even and impact of sales decisions on financials."},
+      {n:"Presentation & Executive Storytelling",cat:"Behavioral",ev:false,d1:2,desc:"Board-ready presentations, synthesising data into compelling narratives, presenting to senior leadership."},
+      {n:"Negotiation & Commercial Influence",cat:"Behavioral",ev:false,d1:3,desc:"Negotiating channel agreements, managing stakeholder trade-offs, influencing decisions without direct authority."},
+      {n:"Sales Analytics & Forecasting",cat:"Technical",ev:false,d1:2,desc:"Territory-wise analysis, conversion metrics, monthly forecasts, variance commentary for MIS."},
+      {n:"Customer Engagement & Relationship Building",cat:"Behavioral",ev:false,d1:3,desc:"Building and sustaining customer relationships, managing objections and ensuring long-term satisfaction."},
+      {n:"Financial Modelling Basics (Excel)",cat:"Technical",ev:false,d1:2,desc:"Basic financial modelling, scenario analysis, break-even modelling for sales planning."},
+      {n:"Strategic Thinking",cat:"Behavioral",ev:false,d1:2,desc:"Connecting day-to-day sales activity to longer-term market share and brand positioning goals."},
+      {n:"Cross-Functional Collaboration",cat:"Behavioral",ev:false,d1:2,desc:"Working effectively with Product, Finance, Supply Chain and Operations for sales execution."},
+      {n:"Communication & Public Speaking",cat:"Behavioral",ev:false,d1:3,desc:"Clarity and confidence in written and verbal communication with customers, dealers and leadership."},
+      {n:"Data-Driven Decision Making",cat:"Behavioral",ev:false,d1:2,desc:"Using market data, CRM analytics and financial metrics to drive territory and pricing decisions."},
+      {n:"Resilience & Growth Mindset",cat:"Behavioral",ev:false,d1:2,desc:"Learning from losses, iterating approach, maintaining energy and focus in a competitive market."},
+      {n:"Professional Ethics & Integrity",cat:"Behavioral",ev:false,d1:3,desc:"Honest representation of JSW Motors products; transparent dealings with customers and partners."},
+      {n:"Time Management & Prioritisation",cat:"Behavioral",ev:false,d1:2,desc:"Managing multiple territories, accounts and internal deliverables simultaneously and efficiently."}
+    ]},
+    finance:{label:"Finance",headcount:12,wave:"April 2026",comps:[
+      {n:"Financial Modeling & Scenario Analysis",cat:"Technical",ev:false,d1:2,desc:"Building dynamic 3-statement financial models (P&L, BS, Cash Flow), DCF basics, scenario planning in Excel."},
+      {n:"SAP FICO / ERP Finance Modules",cat:"Technical",ev:false,d1:2,desc:"SAP FI/CO modules: GL posting, cost centre accounting, internal orders, finance reporting, AP/AR."},
+      {n:"Management Accounting & Cost Controlling",cat:"Technical",ev:false,d1:2,desc:"Cost centre vs profit centre accounting, overhead allocation, variance analysis and product costing."},
+      {n:"Budgeting, Forecasting & Rolling Estimates",cat:"Technical",ev:false,d1:2,desc:"Annual budget process, rolling forecasts, bridge analysis between actuals and budget."},
+      {n:"Financial Statement Analysis (Ind AS)",cat:"Technical",ev:false,d1:2,desc:"P&L, Balance Sheet, Cash Flow interpretation; ratio analysis; Indian Accounting Standards basics."},
+      {n:"Product & EV Vehicle Costing",cat:"Technical",ev:true,d1:2,desc:"Standard costing, should-cost for EV components, gross margin by model, cost reduction opportunities."},
+      {n:"Variance Analysis & MIS Reporting",cat:"Technical",ev:false,d1:2,desc:"Budget vs actual analysis, material/labour/overhead variance, trend identification, MIS pack creation."},
+      {n:"Working Capital & Cash Management",cat:"Technical",ev:false,d1:2,desc:"Cash conversion cycle, DPO/DSO/DIO optimisation, daily cash flow tracking, bank reconciliation."},
+      {n:"Direct & Indirect Taxation (GST / TDS)",cat:"Technical",ev:false,d1:2,desc:"GST in manufacturing, TDS compliance, corporate tax basics, filing and compliance calendar."},
+      {n:"Internal Controls & Audit Readiness",cat:"Technical",ev:false,d1:2,desc:"Internal control framework, audit trail documentation, risk and control matrix."},
+      {n:"Capital Expenditure Planning & Monitoring",cat:"Technical",ev:false,d1:2,desc:"Capex approval, tracking, asset capitalisation and project-level financial oversight."},
+      {n:"Advanced Excel & Power BI for Finance",cat:"Technical",ev:false,d1:2,desc:"Advanced Excel modelling (Power Query, macros), Power BI dashboards for finance reporting."},
+      {n:"Cost-Benefit & Investment Appraisal",cat:"Technical",ev:false,d1:2,desc:"NPV, IRR, payback period for investment appraisal and capital allocation decisions."},
+      {n:"Statutory Compliance (PF, ESI, Gratuity)",cat:"Technical",ev:false,d1:1,desc:"PF, ESI, gratuity, PT compliance, return filing for manufacturing workforce."},
+      {n:"Treasury & Short-Term Liquidity",cat:"Technical",ev:false,d1:1,desc:"Short-term liquidity management, bank guarantees, letter of credit basics."},
+      {n:"Analytical Precision",cat:"Behavioral",ev:false,d1:3,desc:"Exactness in numerical work; zero tolerance for computational errors in finance outputs."},
+      {n:"Attention to Detail & Accuracy",cat:"Behavioral",ev:false,d1:3,desc:"Meticulous documentation; double-checking before submission of any financial report."},
+      {n:"Business Partnering Mindset",cat:"Behavioral",ev:false,d1:2,desc:"Proactively supporting operational teams with financial insights and decision support."},
+      {n:"Confidentiality & Integrity",cat:"Behavioral",ev:false,d1:3,desc:"Protecting sensitive financial data; ethical and transparent financial reporting standards."},
+      {n:"Communication of Financial Insights",cat:"Behavioral",ev:false,d1:2,desc:"Translating financial data into plain language for non-finance stakeholders and business leaders."}
+    ]},
+    hr:{label:"Human Resources",headcount:3,wave:"April 2026",comps:[
+      {n:"Talent Acquisition & Campus Recruitment",cat:"Technical",ev:false,d1:2,desc:"JD creation, sourcing, screening, campus hiring drives, competency-based interviews and offer management."},
+      {n:"Onboarding & Induction Design",cat:"Technical",ev:false,d1:2,desc:"Structured onboarding checklist, induction schedule, buddy system setup and new hire experience design."},
+      {n:"L&D Program Design & TNA",cat:"Technical",ev:false,d1:2,desc:"Training needs analysis, curriculum design, vendor coordination, LMS administration, Kirkpatrick evaluation."},
+      {n:"Performance Management Systems",cat:"Technical",ev:false,d1:2,desc:"KRA/KPI setting, mid-year reviews, appraisal process management and performance calibration."},
+      {n:"Compensation, Benefits & Payroll Basics",cat:"Technical",ev:false,d1:2,desc:"Payroll basics, CTC structuring, variable pay processing, reimbursements, benefits administration."},
+      {n:"HRMS & HR Analytics (Darwinbox / SAP HCM)",cat:"Technical",ev:false,d1:2,desc:"HRMS navigation, HR dashboards, attrition metrics, headcount reporting and workforce analytics."},
+      {n:"Labour Laws & Statutory Compliance",cat:"Technical",ev:false,d1:2,desc:"Factories Act, Contract Labour Act, POSH Act, Shops & Establishments, PF/ESI compliance basics."},
+      {n:"Competency Framework Development",cat:"Technical",ev:false,d1:2,desc:"Competency modelling, proficiency scale design, behavioural indicators and validation methodology."},
+      {n:"HR Business Partnering",cat:"Technical",ev:false,d1:2,desc:"Supporting functional heads on people matters; translating business needs to HR solutions."},
+      {n:"Employee Engagement & Relations",cat:"Technical",ev:false,d1:2,desc:"Pulse surveys, recognition programmes, communication campaigns, grievance handling."},
+      {n:"DEI & Inclusive Hiring (40% Female Target)",cat:"Technical",ev:false,d1:2,desc:"JSW Motors' 40% female hiring target for GETs/MTs; inclusive hiring practices and DEI principles."},
+      {n:"Organisational Development & Change Mgmt",cat:"Technical",ev:false,d1:1,desc:"Change management frameworks (ADKAR/Kotter), OD interventions, culture and org design basics."},
+      {n:"Succession Planning & Hi-Po Identification",cat:"Technical",ev:false,d1:1,desc:"Talent pipeline management, 9-box grid, critical role identification and development planning."},
+      {n:"HR Communication & Employer Branding",cat:"Technical",ev:false,d1:2,desc:"HR communication (offer letters, policy docs), employer brand on LinkedIn and campus channels."},
+      {n:"Statutory Filings (PF / ESI / PT)",cat:"Technical",ev:false,d1:1,desc:"Monthly PF, ESI, gratuity, PT filings and compliance calendar management."},
+      {n:"Empathy & People Orientation",cat:"Behavioral",ev:false,d1:3,desc:"Genuine care for employee welfare; sensitivity and consideration in handling individual situations."},
+      {n:"Confidentiality & Discretion",cat:"Behavioral",ev:false,d1:3,desc:"Handling sensitive employee data and conversations with absolute privacy and professional standards."},
+      {n:"Stakeholder Management",cat:"Behavioral",ev:false,d1:2,desc:"Managing expectations of functional heads, employees and senior leadership effectively."},
+      {n:"Facilitation & Workshop Delivery",cat:"Behavioral",ev:false,d1:2,desc:"Running workshops, induction sessions, training programmes and group presentations."},
+      {n:"Problem-Solving & HR Agility",cat:"Behavioral",ev:false,d1:2,desc:"Rapid resolution of employee concerns; navigating ambiguous and sensitive HR situations confidently."}
+    ]},
+    scm:{label:"Supply Chain Management",headcount:2,wave:"April 2026 + Scattered",comps:[
+      {n:"Supply Chain Strategy & Network Design",cat:"Technical",ev:false,d1:2,desc:"End-to-end supply chain strategy: make-vs-buy decisions, supplier base rationalisation, network optimisation."},
+      {n:"Demand Planning & S&OP",cat:"Technical",ev:false,d1:2,desc:"S&OP process, demand forecasting (statistical, market-driven), consensus planning and exception management."},
+      {n:"Vendor Management & Supplier Development",cat:"Technical",ev:false,d1:2,desc:"Strategic supplier management, supplier audits, scorecards, improvement plans and co-innovation."},
+      {n:"SAP MM / SD & Digital Procurement Tools",cat:"Technical",ev:false,d1:2,desc:"SAP MM/SD modules, PO management, goods receipt, invoice verification and vendor master management."},
+      {n:"Logistics, Freight & Inbound Management",cat:"Technical",ev:false,d1:2,desc:"Inbound logistics, freight modes (road, air, sea), customs clearance and freight cost optimisation."},
+      {n:"Inventory Optimisation & Warehousing",cat:"Technical",ev:false,d1:2,desc:"Inventory policies (min-max, safety stock, EOQ), warehouse management, 5S in stores."},
+      {n:"EV Component Supply Chain",cat:"Technical",ev:true,d1:2,desc:"Battery cell supply chain, semiconductor sourcing, EV component lead times and qualification process."},
+      {n:"Should-Costing & Procurement Analytics",cat:"Technical",ev:false,d1:2,desc:"Should-costing for EV components, spend analytics dashboards, cost-saving identification."},
+      {n:"Supply Chain Risk & Resilience",cat:"Technical",ev:false,d1:2,desc:"Single-source risk, geopolitical risk, capacity risk management and contingency planning."},
+      {n:"Sustainability in Supply Chain (ESG)",cat:"Technical",ev:false,d1:1,desc:"Responsible sourcing, carbon footprint of logistics, conflict minerals, sustainable packaging."},
+      {n:"Material Requirements Planning (MRP)",cat:"Technical",ev:false,d1:2,desc:"MRP logic, BOM explosion, planned orders, exception handling and production schedule alignment."},
+      {n:"Supply Chain Analytics & KPI Management",cat:"Technical",ev:false,d1:2,desc:"Fill rate, DSI, OTIF, CBS — data extraction, visualisation and management reporting."},
+      {n:"Import / Export & Customs Compliance",cat:"Technical",ev:false,d1:1,desc:"Customs duty, DGFT regulations, EXIM documentation and import compliance basics."},
+      {n:"Digital Supply Chain & Control Towers",cat:"Technical",ev:true,d1:1,desc:"Supply Chain Control Tower awareness, digital twin in logistics, IoT-based shipment tracking."},
+      {n:"Category Management",cat:"Technical",ev:false,d1:1,desc:"Portfolio analysis, spend clustering, category strategy development for key commodity groups."},
+      {n:"Analytical Thinking & Data Literacy",cat:"Behavioral",ev:false,d1:3,desc:"Data-driven supply chain decisions; Excel and Power BI proficiency for reporting and analysis."},
+      {n:"Negotiation & Stakeholder Management",cat:"Behavioral",ev:false,d1:2,desc:"Influencing vendors and internal stakeholders; negotiating delivery terms and pricing."},
+      {n:"Supply Chain Agility & Problem-Solving",cat:"Behavioral",ev:false,d1:3,desc:"Rapid response to disruptions; alternate sourcing and routing decisions under pressure."},
+      {n:"Cross-Functional Collaboration",cat:"Behavioral",ev:false,d1:2,desc:"Close coordination with Procurement, Production, Finance, Sales and IT for supply continuity."},
+      {n:"Process Improvement Orientation",cat:"Behavioral",ev:false,d1:2,desc:"Kaizen mindset applied to logistics and supply processes; identifying inefficiencies proactively."}
+    ]},
+    should_costing:{label:"Should Costing",headcount:3,wave:"April 2026 + Scattered",comps:[
+      {n:"Should-Costing Methodology & Cost Models",cat:"Technical",ev:false,d1:2,desc:"Bottom-up cost build (material, process, overhead, profit); cost driver analysis; target-costing approach."},
+      {n:"Bill of Materials (BOM) Analysis",cat:"Technical",ev:false,d1:2,desc:"Multi-level BOM reading, high-cost component identification, make-vs-buy assessment."},
+      {n:"Value Engineering & Cost Reduction",cat:"Technical",ev:false,d1:2,desc:"Value engineering principles: design-for-cost improvements without compromising functionality."},
+      {n:"Supplier Cost Breakdown & Benchmarking",cat:"Technical",ev:false,d1:2,desc:"Obtaining and challenging supplier cost breakdowns; market data and commodity indices for benchmarking."},
+      {n:"Advanced Excel Financial Modelling for Costing",cat:"Technical",ev:false,d1:3,desc:"Dynamic cost models, sensitivity analysis, scenario comparison tools in Excel. Core technical skill."},
+      {n:"EV Manufacturing Process Awareness for Costing",cat:"Technical",ev:true,d1:2,desc:"Manufacturing processes used in EV components (stamping, casting, moulding, welding) and their cost implications."},
+      {n:"Commodity Market Knowledge (Lithium / Copper / Al)",cat:"Technical",ev:true,d1:2,desc:"EV commodity markets (lithium, copper, aluminium, rare earths) and tracking indices for cost models."},
+      {n:"Total Cost of Ownership (TCO) Analysis",cat:"Technical",ev:false,d1:2,desc:"TCO for sourcing decisions: quality costs, logistics, warranty and lifecycle costs."},
+      {n:"Negotiation Using Cost Data",cat:"Behavioral",ev:false,d1:3,desc:"Using should-cost analysis to negotiate with suppliers and justify price reduction targets with evidence."},
+      {n:"Cross-Functional Collaboration (Engg / Finance)",cat:"Behavioral",ev:false,d1:2,desc:"Working with Engineering and Finance to validate costing assumptions, resolve disputes and align targets."},
+      {n:"ERP / SAP Procurement Modules",cat:"Technical",ev:false,d1:1,desc:"SAP MM: PR, PO, GRN, invoice processing, vendor master — basic navigation for cost tracking."},
+      {n:"Spend Analysis & Category Intelligence",cat:"Technical",ev:false,d1:2,desc:"Spend data analysis, category spending breakdown, supplier consolidation opportunity identification."},
+      {n:"Make vs Buy Decision Analysis",cat:"Technical",ev:false,d1:2,desc:"Insource vs outsource decision framework; competitiveness and strategic capability analysis."},
+      {n:"Contract Basics & Commercial Terms",cat:"Technical",ev:false,d1:1,desc:"Key contract clauses, escalation mechanisms, price revision terms and liability basics."},
+      {n:"Financial Statement Literacy",cat:"Technical",ev:false,d1:1,desc:"Reading and interpreting supplier financial statements for commercial risk and cost health assessment."},
+      {n:"Analytical Precision",cat:"Behavioral",ev:false,d1:3,desc:"Exactness in cost modelling; zero tolerance for errors in should-cost spreadsheets."},
+      {n:"Commercial Acumen",cat:"Behavioral",ev:false,d1:3,desc:"Sharp understanding of cost structure, supplier margins and profit impact of procurement decisions."},
+      {n:"Attention to Detail",cat:"Behavioral",ev:false,d1:3,desc:"Meticulousness in BOM reading, cost entry and benchmarking data — precision is business-critical."},
+      {n:"Ethical Standards & Objectivity",cat:"Behavioral",ev:false,d1:3,desc:"Maintaining objectivity in cost benchmarking; no bias towards favoured suppliers; transparent methodology."},
+      {n:"Initiative & Self-Learning",cat:"Behavioral",ev:false,d1:2,desc:"Proactively researching commodity trends, new costing tools and industry benchmarks without prompting."}
+    ]},
+    corp_comm:{label:"Corporate Communications",headcount:1,wave:"Scattered 2026",comps:[
+      {n:"Corporate Writing & Editing",cat:"Technical",ev:false,d1:3,desc:"Drafting, editing and proofreading corporate communications: press releases, speeches, executive memos."},
+      {n:"Brand Communication & Messaging Strategy",cat:"Technical",ev:false,d1:2,desc:"Developing and maintaining consistent brand voice, messaging frameworks and communication guidelines."},
+      {n:"Media Relations & PR Management",cat:"Technical",ev:false,d1:2,desc:"Media engagement, journalist relationship management, press release drafting and media monitoring."},
+      {n:"Digital Communication & Social Media Strategy",cat:"Technical",ev:false,d1:2,desc:"LinkedIn, Twitter, YouTube and other digital channels for corporate communication objectives."},
+      {n:"Crisis Communication Planning",cat:"Technical",ev:false,d1:2,desc:"Crisis communication protocols, holding statements, dark site content, reputation management under pressure."},
+      {n:"Internal Communication & Employee Engagement",cat:"Technical",ev:false,d1:2,desc:"Town halls, newsletters, intranet content, campaigns that drive culture and employee engagement."},
+      {n:"Presentation Design & Executive Storytelling",cat:"Behavioral",ev:false,d1:3,desc:"Board-level presentations, investor decks, leadership communications with compelling visual narratives."},
+      {n:"Stakeholder Management & Government Affairs",cat:"Technical",ev:false,d1:1,desc:"Regulatory and government stakeholder landscape; drafting briefing notes and position papers."},
+      {n:"EV Industry Narrative & Positioning",cat:"Technical",ev:true,d1:2,desc:"Crafting JSW Motors' EV story for media, investors and public: technology, India-first, sustainability."},
+      {n:"Content Strategy, SEO & Digital Analytics",cat:"Technical",ev:false,d1:2,desc:"Content marketing strategy, SEO best practices, Google Analytics and social insights for communication ROI."},
+      {n:"Event Management & Corporate Events",cat:"Technical",ev:false,d1:2,desc:"Planning and executing corporate events, product launches, leadership roadshows and media days."},
+      {n:"Photography & Visual Communication Basics",cat:"Technical",ev:false,d1:1,desc:"Basic photography, graphic design tools (Canva / Adobe basics), visual brand consistency."},
+      {n:"Video Production & Scripting",cat:"Technical",ev:false,d1:1,desc:"Corporate video scripting, production briefing, post-production coordination."},
+      {n:"Public Speaking & Media Training",cat:"Behavioral",ev:false,d1:2,desc:"Preparing and coaching leadership for media interviews, conference presentations and public statements."},
+      {n:"Research & Insight Generation",cat:"Technical",ev:false,d1:2,desc:"Monitoring industry news, media coverage analysis, reputation tracking and competitor communication audit."},
+      {n:"Attention to Detail & Editorial Standards",cat:"Behavioral",ev:false,d1:3,desc:"Zero errors in public-facing communication; adherence to editorial guidelines and brand standards."},
+      {n:"Discretion & Confidentiality",cat:"Behavioral",ev:false,d1:3,desc:"Handling embargoed information, pre-announcement materials and sensitive company matters responsibly."},
+      {n:"Creativity & Original Thinking",cat:"Behavioral",ev:false,d1:2,desc:"Generating fresh communication ideas, campaign concepts and brand storytelling approaches."},
+      {n:"Stakeholder Empathy & Audience Intelligence",cat:"Behavioral",ev:false,d1:2,desc:"Understanding diverse stakeholder perspectives when crafting messages and selecting communication channels."},
+      {n:"Deadline Management & Multi-Tasking",cat:"Behavioral",ev:false,d1:3,desc:"Managing simultaneous communication projects across media, social, internal and event channels."}
+    ]}
+  }
+};
+
+const GAP_INTERP = [
+  {g:"≥ 3",sev:"Critical",cls:"gc-crit",tcls:"tag-crit",bg:"var(--red-l)",meaning:"Trainee has near-zero knowledge in a business-critical area. Risk of safety incident or business failure.",urgency:"Immediate — before Day 30",mode:"Mandatory formal training + daily OJT buddy support (100% structured)",idp:"Priority 1 IDP — weekly mentor check-in; notified to functional head"},
+  {g:"= 2",sev:"Moderate",cls:"gc-mod",tcls:"tag-mod",bg:"var(--ora-l)",meaning:"Significant gap — trainee knows concept but cannot apply independently. KPI underperformance risk.",urgency:"High — Month 1–2",mode:"Blended: 40% formal + 60% OJT + weekly mentor check",idp:"Priority 2 IDP — 60-day milestone review; peer learning group"},
+  {g:"= 1",sev:"Minor",cls:"gc-min",tcls:"tag-min",bg:"var(--amb-l)",meaning:"Minor gap — trainee can perform inconsistently or with some guidance. Development opportunity.",urgency:"Medium — Month 2–3",mode:"Self-paced: 80% OJT + 20% LMS self-directed modules",idp:"Priority 3 IDP — 90-day review; buddy support and self-driven"},
+  {g:"= 0",sev:"Criteria Met",cls:"gc-none",tcls:"tag-none",bg:"var(--grn-l)",meaning:"Trainee meets required level. No immediate intervention needed.",urgency:"Low — monitoring",mode:"OJT reinforcement — maintained through daily work assignments",idp:"Not a priority — note as strength; reinforce through project work"},
+  {g:"≥ +1",sev:"Exceeds",cls:"gc-exc",tcls:"tag-exc",bg:"#EFF6FF",meaning:"Trainee exceeds required level. Leverage as peer trainer or buddy. Fast-track candidate.",urgency:"None — opportunity",mode:"Peer teaching + leadership stretch assignments + Hi-Po flag",idp:"IDP strength — nominate for buddy programme; consider fast-track"}
+];
+
+const PHASES = [
+  {n:"Phase 1",title:"Group Induction",dur:"Days 1–5",focus:"Organisational immersion & safety certification",pct:"10% Formal, 20% Mentoring, 70% Plant Immersion",mods:["JSW Group overview, values and EV strategy","HV Safety Certification (MANDATORY — all Mfg & Engg GETs)","JSW Motors EV product showcase","JSW Grade structure & career pathway (L08T → L18)"]},
+  {n:"Phase 2",title:"College to Corporate",dur:"Days 6–12",focus:"Professional readiness & corporate mindset shift",pct:"10% Formal, 20% Coaching, 70% Live Tasks",mods:["Corporate communication & business writing","Professional conduct and workplace etiquette","POSH Act and compliance (mandatory)","Ethics & governance at JSW; confidentiality awareness","Problem-solving tools: PDCA basics"]},
+  {n:"Phase 3",title:"EV & Technical Foundation",dur:"Days 13–57 (GETs) / Days 13–42 (MTs)",focus:"Domain competency building — EV technology & function",pct:"10% Formal, 20% Mentor, 70% OJT Application",mods:["EV Architecture & Powertrain — Skill Lync Bootcamp (GETs, 15 days)","IATF 16949 awareness — internal Quality team workshop","DELMIA simulation — Dassault partner sessions (Engg GETs)","Function-specific technical modules (Finance / HR / SCM / S&M for MTs)","SAP / ERP basic navigation — key user led session"]},
+  {n:"Phase 4",title:"OJT Rotation",dur:"6-Month Rotations (2 × 3 months)",focus:"Functional deep dive and real work contribution",pct:"0% Formal, 20% Mentor, 80% On-the-Job",mods:["Station-specific OJT on assigned line / function","5S implementation and daily Kaizen participation","Weekly learning log and buddy debrief","Monthly functional mentor meeting","Cross-shift communication and handover practice"]},
+  {n:"Phase 5",title:"Action Learning Project",dur:"Months 9–11 (2 months)",focus:"Real business problem-solving and leadership exposure",pct:"0% Formal, 20% Cross-Functional Mentor, 80% Project",mods:["Live process improvement or business challenge project","Root cause analysis using 8D or A3 methodology","Business case preparation with cost-benefit analysis","Presentation to leadership panel","Peer team review and structured feedback"]},
+  {n:"Phase 6",title:"Hi-Po Evaluation & Placement",dur:"Month 12",focus:"Capability confirmation and career planning",pct:"30% Assessment, 30% Panel, 40% Portfolio Review",mods:["Capstone project presentation to senior leadership","Technical and behavioural competency panel assessment","360° feedback from peers, buddy and supervisor","Career conversation with HR — function preference and growth plan","Final competency certification; Skill Passport reviewed"]}
+];
+
+const MODULES = [
+  {ph:"Phase 1",name:"HV Safety Certification",trigger:"Critical (Gap ≥3)",cohort:"ALL Manufacturing & Engineering GETs — mandatory before any plant floor access",obj:"Apply HV safety procedures correctly (Bloom's L3 — Apply). Achieve certification.",content:"HV hazard identification, LOTO procedure, PPE for EV, battery thermal runaway response, emergency procedures, ISO 45001 compliance.",delivery:"100% Formal — 1-day instructor-led workshop + practical safety drill",dur:"Day 1 (mandatory)",vendor:"External HV Safety Specialist",eval:"L1: Satisfaction survey. L2: Written cert test — min 80% pass (no exceptions). L3: Buddy compliance checklist at Day 30. L4: Zero HV incidents in first 6 months.",rationale:"100% of campus GETs have never worked in an EV plant. HV Safety gap ≥3 is universal. This is a legal obligation under ISO 45001 and a non-negotiable business requirement. No trainee accesses the plant floor without this certification."},
+  {ph:"Phase 3",name:"EV Architecture & Powertrain Fundamentals",trigger:"Moderate–Critical (Gap 2–3)",cohort:"All GETs (all functions); S&M MT; SCM MT",obj:"Understand EV system components (Bloom's L2). Identify components on plant floor (L3). Compare BEV vs HEV vs FCEV (L4).",content:"BEV, HEV, PHEV, FCEV architectures. Traction motor types. Inverter and power electronics. Battery pack structure: cells, modules, pack, BMS. Charging systems (AC L1/L2, DC Fast Charge, CCS). Thermal management overview. EV safety standards awareness.",delivery:"10% Formal (Skill Lync EV Bootcamp, 15 days). 20% Mentor (R&D / Engineering mentor). 70% OJT (component identification, DELMIA demo).",dur:"15 days (GETs) / 5 days (MTs overview)",vendor:"Skill Lync",eval:"L1: Skill Lync satisfaction rating. L2: Technical test — pass 65%. L3: Supervisor checklist — applies EV knowledge at Day 60. L4: Reduction in EV-related errors; deployment readiness score.",rationale:"EV Architecture gap of 2–3 is universal across all campus GETs. This is the foundational technical module enabling all subsequent plant-specific learning. Without it, GETs cannot safely identify components, follow work instructions or participate meaningfully in plant commissioning."},
+  {ph:"Phase 3",name:"IATF 16949 & Automotive Quality Awareness",trigger:"Moderate (Gap 2)",cohort:"Manufacturing GETs, Quality GETs, Engineering GETs",obj:"Understand IATF 16949 structure (Bloom's L2). Read a control plan correctly (L3). Link FMEA outputs to control plan (L4).",content:"IATF 16949 — 10 clauses summary. Five automotive core tools: APQP, PPAP, FMEA, SPC, MSA. Control plan reading. Quality gates in manufacturing. Customer-specific requirements. IATF vs ISO 9001 differences.",delivery:"10% Formal (internal Quality team, 2-day classroom). 20% Mentor (Quality HRBP). 70% OJT (mock control plan + IATF document review on live documents).",dur:"3 days classroom + 2 days OJT",vendor:"Internal Quality Team + Drawinbox LMS",eval:"L1: Post-session survey. L2: IATF awareness quiz — pass 70%. L3: Correctly interprets control plan by Day 45. L4: IATF audit-readiness score at Month 6.",rationale:"IATF 16949 is the operating quality standard for JSW Motors' greenfield plant. A gap of 2 is expected from all campus hires. Quality and Manufacturing GETs without IATF knowledge create audit risk and process non-conformances within their first month on the line."},
+  {ph:"Phase 3",name:"DELMIA Digital Manufacturing Introduction",trigger:"Critical (Gap ≥3)",cohort:"Engineering GETs (Manufacturing Engg track)",obj:"Navigate DELMIA environment (Bloom's L2). Create a basic work instruction (L3).",content:"What is DELMIA and its role in digital manufacturing. DELMIA Process Engineer navigation. Viewing and modifying work instructions. Virtual commissioning concept. DELMIA–CAD–ERP integration at JSW Motors. Digital twin use cases.",delivery:"10% Formal (Dassault partner, 3-day classroom + lab). 20% Mentor (Engineering mentor on live DELMIA). 70% OJT (supervised work instruction authoring for one assembly station).",dur:"3 days classroom + ongoing OJT",vendor:"Dassault Systèmes Authorised Partner",eval:"L1: Lab satisfaction score. L2: Navigate 5 tasks correctly. L3: DELMIA usage confirmed by supervisor at Day 60. L4: Number of work instructions authored; reduction in paper-based WIs.",rationale:"DELMIA gap ≥3 is the largest technical gap for Engineering GETs. JSW Motors' greenfield digital manufacturing strategy depends on DELMIA-literate engineers to commission the plant virtually before physical build. Early DELMIA exposure accelerates plant commissioning timelines."},
+  {ph:"Phase 2",name:"Professional Readiness & College-to-Corporate",trigger:"Minor–Moderate (Gap 1–2)",cohort:"All GETs & MTs",obj:"Demonstrate professional communication (Bloom's L3). Apply corporate norms and ownership mindset (L3).",content:"Campus-to-corporate mindset shift. Business email writing and communication. Meeting etiquette and professional conduct. POSH Act deep dive (mandatory). Confidentiality and NDA fundamentals. Ethics and governance at JSW. Problem-solving: PDCA basics.",delivery:"10% Formal (external behavioural vendor workshops). 20% Mentor (buddy daily debrief, professional feedback journal). 70% OJT (real tasks with structured review from Day 1).",dur:"7 days",vendor:"External Behavioural Vendor + Drawinbox LMS (POSH, Ethics)",eval:"L1: Pre/post confidence survey. L2: Behavioural rubric by buddy (Week 2). L3: Manager observation at Day 30 — communication and professionalism checklist. L4: Reduction in escalations and communication errors.",rationale:"Behavioural gaps of 1–2 across B-02, B-05, B-06 are universal in campus hires. While smaller in gap score, these create the most visible friction in day-to-day collaboration. Addressing them in Phase 2 creates the psychological readiness for deeper technical training in Phase 3."},
+  {ph:"Phase 4",name:"On-the-Job Rotation & Shop Floor Immersion",trigger:"Minor (Gap 1) — resolved through sustained OJT",cohort:"Manufacturing GETs: 5 main shops rotation. All other GETs: deployed directly to function.",obj:"Perform assigned station tasks independently (L3). Identify and escalate process deviations (L4). Participate in Kaizen (L5).",content:"Station OJT: assembly line, quality inspection, maintenance tasks. 5S on assigned work area. Daily Kaizen circle. SAP production order practice. Gemba walks. Cross-shift handover. Weekly learning log. Buddy check-in and structured feedback.",delivery:"0% Formal. 20% Mentor (weekly buddy debrief; monthly functional head meeting). 80% OJT (daily structured task list at assigned station).",dur:"6 months (2 rotations × 3 months for Mfg GETs)",vendor:"Internal — Functional Managers, Shift Supervisors",eval:"L3: 30/60/90-day supervisor checklist. L4: Station KPI improvement (defect rate, output, safety incidents). Behavioural: 360° peer feedback at Month 6.",rationale:"70% of all competency development happens through OJT (70-20-10 model). The structured rotation closes gap-1 and gap-2 range competencies that classroom training cannot address efficiently. For Mfg GETs, rotating through 5 shops builds manufacturing systems versatility essential for future supervisory roles."},
+  {ph:"Phase 5",name:"Action Learning Project (ALP)",trigger:"All critical gaps resolved by Phase 4; ALP applies advanced competencies",cohort:"All GETs & MTs (cross-functional project teams)",obj:"Conduct root cause analysis on a live business problem (L4). Build a recommendation with data (L5). Design and present a sustainable solution (L6).",content:"Problem statement scoping with functional head. Data collection and analysis. Root cause analysis (8D / A3 / VSM). Solution design and prototyping. Business case: cost-benefit, ROI. Presentation to leadership panel. Peer team review. Learning reflection and individual report.",delivery:"0% Formal. 20% Mentor (functional mentor + HR cross-functional group sessions). 80% OJT (full project execution in real business environment).",dur:"2 months (Months 9–11)",vendor:"Internal — Functional Heads + HR",eval:"L2: Project methodology quality (mentor mid-point review). L3: Application of 8D/A3/VSM to real problem. L4: Business impact (cost saving, efficiency, quality improvement). Hi-Po input: project quality feeds Hi-Po evaluation score.",rationale:"The ALP is where trainees apply competencies under real business pressure — the difference between 'knowing' (Level 2) and 'doing with impact' (Level 4-5). ALP outcomes serve as the primary data source for Hi-Po identification, directly linking TNA outcomes to talent pipeline decisions."},
+  {ph:"Phase 6",name:"Capstone Assessment & Hi-Po Evaluation",trigger:"Final assessment — identifies who exceeded targets (Gap ≤0)",cohort:"All GETs & MTs",obj:"Demonstrate mastery across technical and behavioural competencies (L5). Present strategic recommendations to leadership (L6).",content:"Capstone project presentation to leadership panel. Technical competency assessment (written / practical per function). Behavioural panel interview. 360° feedback compilation. Cultural alignment assessment. Career conversation with HR. Skill Passport review: all certifications confirmed.",delivery:"30% Formal (panel assessment). 30% Mentor (final debrief and endorsement). 40% Portfolio of work evidence.",dur:"2 weeks (Month 12)",vendor:"Internal — Senior Leadership + HR",eval:"L2: Final competency assessment — target ≥Level 3 on all critical competencies. L3: 360° score ≥3.5/5.0. L4: Hi-Po identification, confirmed placement, PPO issued. Program ROI: 90-day retention rate, quality KPIs, deployment readiness.",rationale:"Phase 6 closes the TNA loop — it validates that the training programme achieved its intended outcomes. Trainees who still show gaps receive an extended IDP. Those who exceed targets are placed on an accelerated career path, creating direct ROI from the entire competency mapping → gap analysis → TNA → training investment."}
+];
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════════════════════════════════
+let dictFilter='all';
+let fhqRatings={},fhqTop10={},fhqDesired={};
+let saLevels={},saEvidence={};
+let gapCurrentLevels={};
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// NAV
+// ═══════════════════════════════════════════════════════════════════════════════
+document.querySelectorAll('.nav-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    const tabId=btn.dataset.tab;
+    document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+    document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+    document.getElementById('tab-'+tabId).classList.add('active');
+    btn.classList.add('active');
+    if(tabId==='dashboard') loadDashboard();
+  });
+});
+
+function goToTab(id){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('tab-'+id).classList.add('active');
+  document.querySelector(`[data-tab="${id}"]`).classList.add('active');
+  if(id==='dashboard') loadDashboard();
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// UTILS
+// ═══════════════════════════════════════════════════════════════════════════════
+function roles(type){ return Object.keys(COMPS[type]); }
+function populateSel(id,type){
+  const s=document.getElementById(id);
+  s.innerHTML='';
+  roles(type).forEach(k=>{
+    const o=document.createElement('option');
+    o.value=k; o.textContent=COMPS[type][k].label;
+    s.appendChild(o);
+  });
+}
+function getGapClass(g){ return g>=3?'gc-crit':g===2?'gc-mod':g===1?'gc-min':g<=0&&g>-1?'gc-none':'gc-exc'; }
+function getTagClass(g){ return g>=3?'tag-crit':g===2?'tag-mod':g===1?'tag-min':g<=0&&g>-1?'tag-none':'tag-exc'; }
+function getGapLabel(g){ return g>=3?'Critical':g===2?'Moderate':g===1?'Minor':g===0?'Met':'Exceeds'; }
+function getGapBg(g){ return g>=3?'var(--red-l)':g===2?'var(--ora-l)':g===1?'var(--amb-l)':g===0?'var(--grn-l)':'#EFF6FF'; }
+
+function toast(){
+  const t=document.getElementById('toast');
+  t.style.display='flex';
+  setTimeout(()=>t.style.display='none',2500);
+}
+
+async function updateRespCount(){
+  let c=0;
+  try{
+    const fh=await window.storage.list('fh:');
+    const sa=await window.storage.list('sa:');
+    c=(fh.keys||[]).length+(sa.keys||[]).length;
+  }catch(e){}
+  document.getElementById('resp-count').textContent=c;
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// OVERVIEW
+// ═══════════════════════════════════════════════════════════════════════════════
+function renderOverview(){
+  const gc=document.getElementById('get-dept-chips');
+  const mc=document.getElementById('mt-dept-chips');
+  gc.innerHTML=roles('GET').map(k=>`<span class="tag tag-tech" style="margin:3px 3px 3px 0;padding:4px 10px;font-size:11px">${COMPS.GET[k].label} <span style="opacity:.6">(${COMPS.GET[k].headcount})</span></span>`).join('');
+  mc.innerHTML=roles('MT').map(k=>`<span class="tag tag-ev" style="margin:3px 3px 3px 0;padding:4px 10px;font-size:11px">${COMPS.MT[k].label} <span style="opacity:.6">(${COMPS.MT[k].headcount})</span></span>`).join('');
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// DICTIONARY
+// ═══════════════════════════════════════════════════════════════════════════════
+function onDictTypeChange(){ populateSel('dict-role',document.getElementById('dict-type').value); renderDict(); }
+function setDictFilter(f,btn){
+  dictFilter=f;
+  document.querySelectorAll('#dict-filters .btn').forEach(b=>{b.className='btn btn-sm btn-ghost';});
+  btn.className='btn btn-sm btn-primary';
+  renderDict();
+}
+function renderDict(){
+  const type=document.getElementById('dict-type').value;
+  const role=document.getElementById('dict-role').value;
+  if(!role) return;
+  const info=COMPS[type][role];
+  let list=info.comps.filter(c=>{
+    if(dictFilter==='all') return true;
+    if(dictFilter==='ev') return c.ev;
+    if(dictFilter==='critical') return c.d1>=3;
+    return c.cat===dictFilter;
+  });
+  let html=`<div class="card card-sm" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:12px">
+    <div style="display:flex;align-items:center;gap:8px"><span style="font-size:14px;font-weight:600;color:var(--jsw)">${info.label}</span><span class="tag tag-tech">Headcount: ${info.headcount}</span><span class="tag tag-beh">${info.wave}</span></div>
+    <small>Showing ${list.length} of ${info.comps.length} competencies</small></div>`;
+  list.forEach((c,i)=>{
+    html+=`<div class="comp-row">
+      <div class="comp-idx">${i+1}</div>
+      <div class="comp-body">
+        <div class="comp-name">${c.n}${c.ev?' <span class="tag tag-ev"><span class="ev-dot"></span>EV</span>':''}</div>
+        <div class="comp-desc">${c.desc}</div>
+        <div class="comp-meta"><span class="tag ${c.cat==='Technical'?'tag-tech':'tag-beh'}">${c.cat}</span></div>
+      </div>
+      <div style="text-align:center;flex-shrink:0">
+        <div class="d1-badge d1-${c.d1}" style="margin:0 auto">${c.d1}</div>
+        <div style="font-size:9px;color:var(--g400);margin-top:2px">Day-1 req.</div>
+        <div style="font-size:9px;color:var(--g600);font-weight:600;margin-top:1px">${PL[c.d1]}</div>
+      </div>
+    </div>`;
+  });
+  document.getElementById('dict-container').innerHTML=html;
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// FUNCTIONAL HEAD QUESTIONNAIRE
+// ═══════════════════════════════════════════════════════════════════════════════
+function onFHQTypeChange(){ populateSel('fhq-role',document.getElementById('fhq-type').value); renderFHQ(); }
+function renderFHQ(){
+  const type=document.getElementById('fhq-type').value;
+  const role=document.getElementById('fhq-role').value;
+  if(!role) return;
+  const comps=COMPS[type][role].comps;
+  const rKey=`${type}:${role}`;
+  if(!fhqRatings[rKey]) fhqRatings[rKey]=new Array(comps.length).fill(0);
+  if(!fhqTop10[rKey]) fhqTop10[rKey]=new Array(comps.length).fill(false);
+  if(!fhqDesired[rKey]) fhqDesired[rKey]=comps.map(c=>c.d1);
+  let html='';
+  comps.forEach((c,i)=>{
+    const rating=fhqRatings[rKey][i]||0;
+    const isTop=fhqTop10[rKey][i];
+    const des=fhqDesired[rKey][i]||c.d1;
+    let stars='';
+    for(let s=1;s<=5;s++) stars+=`<span class="star ${s<=rating?'on':''}" onclick="setFHQRating('${rKey}',${i},${s},event)" title="${s} star">★</span>`;
+    const desOpts=[1,2,3,4,5].map(v=>`<option value="${v}" ${des==v?'selected':''}>${v} — ${PL[v]}</option>`).join('');
+    html+=`<div class="resp-row ${isTop?'top10':''}" id="fhqrow-${i}">
+      <div>
+        <div style="font-size:13px;font-weight:${isTop?'600':'500'};color:var(--g800)">${i+1}. ${c.n}${c.ev?' <span class="tag tag-ev" style="font-size:9px"><span class="ev-dot"></span>EV</span>':''}</div>
+        <div style="font-size:10px;color:var(--g400);margin-top:2px">${c.desc.substring(0,90)}${c.desc.length>90?'…':''}</div>
+      </div>
+      <div style="text-align:center">
+        <div class="stars">${stars}</div>
+        <div class="rating-label">Importance</div>
+      </div>
+      <div class="top10-checkbox">
+        <input type="checkbox" id="top10-${i}" ${isTop?'checked':''} onchange="toggleTop10('${rKey}',${i},this.checked)">
+        <label for="top10-${i}" style="font-size:10px;color:var(--g500);cursor:pointer">Top 10</label>
+      </div>
+      <div>
+        <select class="desired-select" onchange="setDesired('${rKey}',${i},this.value)">${desOpts}</select>
+        <div class="rating-label">Min Day-1 Level</div>
+      </div>
+    </div>`;
+  });
+  document.getElementById('fhq-container').innerHTML=html;
+  updateFHQCounter(rKey);
+}
+
+function setFHQRating(rKey,idx,val,e){
+  e.stopPropagation();
+  fhqRatings[rKey][idx]=fhqRatings[rKey][idx]===val?0:val;
+  renderFHQ();
+}
+function toggleTop10(rKey,idx,checked){
+  const count=(fhqTop10[rKey]||[]).filter(Boolean).length;
+  if(checked && count>=10){
+    document.getElementById(`top10-${idx}`).checked=false;
+    alert('You can select a maximum of 10 competencies. Deselect one before adding another.');
+    return;
+  }
+  if(!fhqTop10[rKey]) fhqTop10[rKey]=[];
+  fhqTop10[rKey][idx]=checked;
+  updateFHQCounter(rKey);
+  const row=document.getElementById(`fhqrow-${idx}`);
+  if(row) row.classList.toggle('top10',checked);
+}
+function setDesired(rKey,idx,val){
+  if(!fhqDesired[rKey]) fhqDesired[rKey]=[];
+  fhqDesired[rKey][idx]=parseInt(val);
+}
+function updateFHQCounter(rKey){
+  const count=(fhqTop10[rKey]||[]).filter(Boolean).length;
+  document.getElementById('fhq-top10-count').textContent=count;
+  const el=document.getElementById('fhq-top10-counter');
+  if(el) el.innerHTML=`<span class="tag ${count===10?'tag-none':'tag-neutral'}" style="font-size:12px">${count}/10 top competencies selected${count===10?' ✓':''}</span>`;
+}
+function clearFHQ(){
+  const type=document.getElementById('fhq-type').value;
+  const role=document.getElementById('fhq-role').value;
+  const rKey=`${type}:${role}`;
+  fhqRatings[rKey]=[];fhqTop10[rKey]=[];fhqDesired[rKey]=[];
+  ['fh-name','fh-desig','fh-date','fh-q1','fh-q2','fh-q3','fh-q4'].forEach(id=>document.getElementById(id).value='');
+  renderFHQ();
+}
+async function submitFHQ(){
+  const name=document.getElementById('fh-name').value.trim();
+  const desig=document.getElementById('fh-desig').value.trim();
+  if(!name){alert('Please enter your name before submitting.');return;}
+  const type=document.getElementById('fhq-type').value;
+  const role=document.getElementById('fhq-role').value;
+  const rKey=`${type}:${role}`;
+  const top10Count=(fhqTop10[rKey]||[]).filter(Boolean).length;
+  if(top10Count<1){alert('Please select at least 1 top competency before submitting.');return;}
+  const ts=Date.now();
+  const payload=JSON.stringify({
+    type:'FH',respondent:name,designation:desig,date:document.getElementById('fh-date').value,
+    progType:type,dept:COMPS[type][role].label,role,
+    ratings:fhqRatings[rKey]||[],top10:fhqTop10[rKey]||[],
+    desired:fhqDesired[rKey]||[],
+    q1:document.getElementById('fh-q1').value,
+    q2:document.getElementById('fh-q2').value,
+    q3:document.getElementById('fh-q3').value,
+    q4:document.getElementById('fh-q4').value,
+    timestamp:ts,compCount:COMPS[type][role].comps.length
+  });
+  try{
+    await window.storage.set(`fh:${ts}:${role}`,payload);
+    toast();
+    await updateRespCount();
+    alert(`✓ Response saved successfully!\n\nRespondent: ${name}\nDepartment: ${COMPS[type][role].label}\nTop 10 competencies: ${top10Count}\n\nView the Response Dashboard tab to see all submissions.`);
+  }catch(e){alert('Error saving response. Please try again.');}
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// SELF ASSESSMENT
+// ═══════════════════════════════════════════════════════════════════════════════
+function onSATypeChange(){ populateSel('sa-role',document.getElementById('sa-type').value); renderSA(); }
+function renderSA(){
+  const type=document.getElementById('sa-type').value;
+  const role=document.getElementById('sa-role').value;
+  if(!role) return;
+  const comps=COMPS[type][role].comps;
+  const rKey=`${type}:${role}`;
+  if(!saLevels[rKey]) saLevels[rKey]=new Array(comps.length).fill(1);
+  if(!saEvidence[rKey]) saEvidence[rKey]=new Array(comps.length).fill('');
+  let html='';
+  comps.forEach((c,i)=>{
+    const cur=saLevels[rKey][i]||1;
+    html+=`<div class="sa-row">
+      <div>
+        <div style="font-size:13px;font-weight:500;color:var(--g800)">${i+1}. ${c.n}${c.ev?' <span class="tag tag-ev" style="font-size:9px">EV</span>':''}</div>
+        <div style="font-size:10px;color:var(--g400);margin-top:2px">${c.desc.substring(0,80)}${c.desc.length>80?'…':''}</div>
+        <div style="margin-top:4px"><span class="tag ${c.cat==='Technical'?'tag-tech':'tag-beh'}">${c.cat}</span> <span style="font-size:10px;color:var(--g400)">Day-1 req: <strong>${c.d1}</strong></span></div>
+      </div>
+      <div class="slider-wrap">
+        <input type="range" min="1" max="5" value="${cur}" oninput="setSALevel('${rKey}',${i},this.value,this)">
+        <div class="slider-labels"><span>1</span><span id="sav-${i}" style="font-weight:700;color:var(--jsw);font-size:11px">${PL[cur]} (${cur})</span><span>5</span></div>
+      </div>
+      <input type="text" placeholder="Brief evidence or example…" value="${saEvidence[rKey][i]||''}" oninput="setSAEvidence('${rKey}',${i},this.value)" style="font-size:12px">
+    </div>`;
+  });
+  document.getElementById('sa-container').innerHTML=html;
+  updateSACompletion(rKey);
+}
+function setSALevel(rKey,idx,val,slider){
+  if(!saLevels[rKey]) saLevels[rKey]=[];
+  saLevels[rKey][idx]=parseInt(val);
+  document.getElementById(`sav-${idx}`).textContent=PL[parseInt(val)]+' ('+val+')';
+  updateSACompletion(rKey);
+}
+function setSAEvidence(rKey,idx,val){
+  if(!saEvidence[rKey]) saEvidence[rKey]=[];
+  saEvidence[rKey][idx]=val;
+}
+function updateSACompletion(rKey){
+  const type=document.getElementById('sa-type').value;
+  const role=document.getElementById('sa-role').value;
+  const total=COMPS[type][role].comps.length;
+  const filled=(saLevels[rKey]||[]).filter(v=>v>1).length;
+  const pct=Math.round(filled/total*100);
+  const el=document.getElementById('sa-completion');
+  if(el) el.textContent=pct+'%';
+}
+function clearSA(){
+  const type=document.getElementById('sa-type').value;
+  const role=document.getElementById('sa-role').value;
+  const rKey=`${type}:${role}`;
+  saLevels[rKey]=[];saEvidence[rKey]=[];
+  ['sa-name','sa-id','sa-doj','sa-q1','sa-q2','sa-q3','sa-q4'].forEach(id=>document.getElementById(id).value='');
+  renderSA();
+}
+async function submitSA(){
+  const name=document.getElementById('sa-name').value.trim();
+  const empId=document.getElementById('sa-id').value.trim();
+  if(!name){alert('Please enter your name before submitting.');return;}
+  const type=document.getElementById('sa-type').value;
+  const role=document.getElementById('sa-role').value;
+  const rKey=`${type}:${role}`;
+  const ts=Date.now();
+  const payload=JSON.stringify({
+    type:'SA',trainee:name,empId,doj:document.getElementById('sa-doj').value,
+    progType:type,dept:COMPS[type][role].label,role,
+    levels:saLevels[rKey]||[],evidence:saEvidence[rKey]||[],
+    q1:document.getElementById('sa-q1').value,
+    q2:document.getElementById('sa-q2').value,
+    q3:document.getElementById('sa-q3').value,
+    q4:document.getElementById('sa-q4').value,
+    timestamp:ts,compCount:COMPS[type][role].comps.length
+  });
+  try{
+    await window.storage.set(`sa:${ts}:${role}`,payload);
+    toast();
+    await updateRespCount();
+    alert(`✓ Self-assessment submitted!\n\nName: ${name}\nDepartment: ${COMPS[type][role].label}\n\nYour responses have been saved. Your manager will review these at the 30-day mark.\n\nYou can now view the Gap Analysis tab to see your competency gaps.`);
+  }catch(e){alert('Error saving response. Please try again.');}
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// GAP ANALYSIS
+// ═══════════════════════════════════════════════════════════════════════════════
+function onGapTypeChange(){ populateSel('gap-role',document.getElementById('gap-type').value); renderGap(); }
+function renderGap(){
+  const type=document.getElementById('gap-type').value;
+  const role=document.getElementById('gap-role').value;
+  if(!role) return;
+  const comps=COMPS[type][role].comps;
+  const rKey=`${type}:${role}`;
+  if(!gapCurrentLevels[rKey]) gapCurrentLevels[rKey]=new Array(comps.length).fill(1);
+  let html='',crit=0,mod=0,minor=0,none=0,total=0;
+  comps.forEach((c,i)=>{
+    const cur=gapCurrentLevels[rKey][i]||1;
+    const g=Math.max(0,c.d1-cur);
+    const bg=getGapBg(g);
+    total+=g;
+    if(g>=3)crit++; else if(g===2)mod++; else if(g===1)minor++; else none++;
+    html+=`<div class="gap-row" style="background:${bg}">
+      <div><div style="font-size:12px;font-weight:500;color:var(--g800)">${c.n}${c.ev?' <span class="tag tag-ev" style="font-size:9px">EV</span>':''}</div><div style="font-size:10px;color:var(--g500)">${c.cat}</div></div>
+      <div style="text-align:center"><div class="d1-badge d1-${c.d1}" style="margin:0 auto">${c.d1}</div><div style="font-size:9px;color:var(--g400);margin-top:1px">Required</div></div>
+      <div>
+        <input type="range" min="1" max="5" value="${cur}" oninput="setGapLevel('${rKey}',${i},this.value,this)" style="width:100%">
+        <div style="display:flex;justify-content:space-between;font-size:9px;color:var(--g400);margin-top:2px"><span>1</span><span id="gv-${i}" style="font-weight:700;color:var(--jsw3)">${PL[cur]} (${cur})</span><span>5</span></div>
+      </div>
+      <div style="text-align:center"><div class="gap-circle ${getGapClass(g)}">${g}</div></div>
+      <div style="text-align:center"><span class="tag ${getTagClass(g)}">${getGapLabel(g)}</span></div>
+    </div>`;
+  });
+  document.getElementById('gap-container').innerHTML=html;
+  document.getElementById('gs-crit').textContent=crit;
+  document.getElementById('gs-mod').textContent=mod;
+  document.getElementById('gs-min').textContent=minor;
+  document.getElementById('gs-none').textContent=none;
+  document.getElementById('gs-avg').textContent=(total/comps.length).toFixed(1);
+}
+function setGapLevel(rKey,idx,val,slider){
+  if(!gapCurrentLevels[rKey]) gapCurrentLevels[rKey]=[];
+  gapCurrentLevels[rKey][idx]=parseInt(val);
+  document.getElementById(`gv-${idx}`).textContent=PL[parseInt(val)]+' ('+val+')';
+  renderGap();
+}
+function generateTNA(){
+  const type=document.getElementById('gap-type').value;
+  const role=document.getElementById('gap-role').value;
+  if(!role){alert('Please select a department first.');return;}
+  const comps=COMPS[type][role].comps;
+  const rKey=`${type}:${role}`;
+  let crit=[],mod=[],minor=[];
+  comps.forEach((c,i)=>{
+    const g=Math.max(0,c.d1-(gapCurrentLevels[rKey]&&gapCurrentLevels[rKey][i]||1));
+    if(g>=3)crit.push(c.n); else if(g===2)mod.push(c.n); else if(g===1)minor.push(c.n);
+  });
+  let content='';
+  if(crit.length) content+=`<div class="path-card path-crit"><div style="font-size:12px;font-weight:700;color:var(--red);margin-bottom:6px">CRITICAL — Mandatory Training before Day 30 (${crit.length} competencies)</div><div style="font-size:11px;color:var(--g700);margin-bottom:6px">${crit.join(' · ')}</div><div style="font-size:11px;color:var(--g600)">Pathway: Skill Lync EV Bootcamp + HV Safety Certification + IATF Awareness (Drawinbox LMS). Resolve to minimum Level 2 before plant deployment.</div></div>`;
+  if(mod.length) content+=`<div class="path-card path-mod"><div style="font-size:12px;font-weight:700;color:var(--ora);margin-bottom:6px">MODERATE — Phase 2–3 Priority Training (${mod.length} competencies)</div><div style="font-size:11px;color:var(--g700);margin-bottom:6px">${mod.join(' · ')}</div><div style="font-size:11px;color:var(--g600)">Pathway: Instructor-led classroom + Drawinbox LMS + plant exposure during Phases 2–3 (Days 1–45). Evaluate by end of Phase 3.</div></div>`;
+  if(minor.length) content+=`<div class="path-card path-min"><div style="font-size:12px;font-weight:700;color:var(--amb);margin-bottom:6px">MINOR — OJT Rotation Development (${minor.length} competencies)</div><div style="font-size:11px;color:var(--g700);margin-bottom:6px">${minor.join(' · ')}</div><div style="font-size:11px;color:var(--g600)">Pathway: OJT + buddy check-ins + Skillsoft / Drawinbox self-paced LMS. Tracked by rotation manager. Reviewed at Month 6.</div></div>`;
+  if(!content) content=`<div class="alert alert-success"><span>✓</span><span>No critical or moderate gaps identified for ${COMPS[type][role].label}. Trainee meets or exceeds all Day-1 requirements. Continue with OJT reinforcement and monitor via 30/60/90-day supervisor checklists.</span></div>`;
+  document.getElementById('tna-auto-label').textContent=`Auto-generated TNA for: ${COMPS[type][role].label} (${type})`;
+  document.getElementById('tna-auto-content').innerHTML=content;
+  document.getElementById('tna-auto').style.display='block';
+  goToTab('tna');
+  setTimeout(()=>document.getElementById('tna-auto').scrollIntoView({behavior:'smooth'}),100);
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// TNA
+// ═══════════════════════════════════════════════════════════════════════════════
+function renderTNA(){
+  // Interpretation table
+  const tbody=document.getElementById('tna-interp-table');
+  const bgs=['var(--red-l)','var(--ora-l)','var(--amb-l)','var(--grn-l)','#EFF6FF'];
+  tbody.innerHTML=GAP_INTERP.map((r,i)=>`<tr style="background:${bgs[i]}">
+    <td style="padding:10px 12px;font-weight:700;white-space:nowrap"><span class="gap-circle ${r.cls}" style="display:inline-flex;width:24px;height:24px;font-size:11px">${r.g}</span></td>
+    <td style="padding:10px 12px"><span class="tag ${r.tcls}">${r.sev}</span></td>
+    <td style="padding:10px 12px;font-size:12px">${r.meaning}</td>
+    <td style="padding:10px 12px;font-size:12px;font-weight:600;white-space:nowrap">${r.urgency}</td>
+    <td style="padding:10px 12px;font-size:12px">${r.mode}</td>
+    <td style="padding:10px 12px;font-size:12px">${r.idp}</td>
+  </tr>`).join('');
+
+  // Learning phases
+  const phCols=['#1F3A6B','#5B21B6','#065F46','#0C4A6E','#7C2D12','#1E1B4B'];
+  document.getElementById('lp-phases').innerHTML=PHASES.map((p,i)=>`
+    <div class="lp-card">
+      <div class="lp-header"><div class="lp-dot" style="background:${phCols[i]}"></div><div style="font-size:11px;font-weight:700;color:${phCols[i]};text-transform:uppercase;letter-spacing:.5px">${p.n} — ${p.title}</div></div>
+      <div style="font-size:11px;color:var(--g500);margin-bottom:6px">📅 ${p.dur} &nbsp;·&nbsp; ${p.pct}</div>
+      <div style="font-size:12px;font-weight:600;color:var(--g700);margin-bottom:6px">${p.focus}</div>
+      ${p.mods.map(m=>`<div style="font-size:11px;color:var(--g600);padding:3px 0;border-bottom:1px solid var(--g100);display:flex;gap:6px"><span style="color:${phCols[i]};font-weight:700">›</span>${m}</div>`).join('')}
+    </div>`).join('');
+
+  // Training modules
+  const phColors={'Phase 1':'#1F3A6B','Phase 2':'#5B21B6','Phase 3':'#065F46','Phase 4':'#0C4A6E','Phase 5':'#7C2D12','Phase 6':'#1E1B4B'};
+  document.getElementById('tna-modules').innerHTML=MODULES.map(m=>`
+    <div class="tna-stage">
+      <div class="tna-hdr">
+        <div class="tna-num" style="background:${phColors[m.ph]||'var(--jsw)'}">${m.ph.split(' ')[1]}</div>
+        <div style="flex:1">
+          <div style="font-size:13px;font-weight:700;color:var(--g800);margin-bottom:2px">${m.name}</div>
+          <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:4px"><span class="tag tag-crit" style="font-size:10px">Trigger: ${m.trigger}</span><span class="tag tag-neutral" style="font-size:10px">${m.ph}</span></div>
+        </div>
+      </div>
+      <div class="g2" style="gap:10px;margin-bottom:8px">
+        <div><div style="font-size:10px;font-weight:700;color:var(--g500);margin-bottom:3px;text-transform:uppercase;letter-spacing:.5px">Target Cohort</div><p style="font-size:11px">${m.cohort}</p></div>
+        <div><div style="font-size:10px;font-weight:700;color:var(--g500);margin-bottom:3px;text-transform:uppercase;letter-spacing:.5px">Duration & Vendor</div><p style="font-size:11px"><strong>${m.dur}</strong> · ${m.vendor}</p></div>
+      </div>
+      <div class="g2" style="gap:10px;margin-bottom:8px">
+        <div><div style="font-size:10px;font-weight:700;color:var(--g500);margin-bottom:3px;text-transform:uppercase;letter-spacing:.5px">Learning Objectives (Bloom's)</div><p style="font-size:11px">${m.obj}</p></div>
+        <div><div style="font-size:10px;font-weight:700;color:var(--g500);margin-bottom:3px;text-transform:uppercase;letter-spacing:.5px">Delivery (70-20-10)</div><p style="font-size:11px">${m.delivery}</p></div>
+      </div>
+      <div style="margin-bottom:8px"><div style="font-size:10px;font-weight:700;color:var(--g500);margin-bottom:3px;text-transform:uppercase;letter-spacing:.5px">Content & Topics</div><p style="font-size:11px">${m.content}</p></div>
+      <div class="g2" style="gap:10px;margin-bottom:8px">
+        <div><div style="font-size:10px;font-weight:700;color:var(--g500);margin-bottom:3px;text-transform:uppercase;letter-spacing:.5px">Evaluation (Kirkpatrick L1–L4)</div><p style="font-size:11px">${m.eval}</p></div>
+        <div style="background:var(--jsw-l,#EFF6FF);border-radius:var(--radius-sm);padding:10px;border-left:3px solid var(--jsw3)"><div style="font-size:10px;font-weight:700;color:var(--jsw3);margin-bottom:3px;text-transform:uppercase;letter-spacing:.5px">Rationale</div><p style="font-size:11px;color:var(--jsw)">${m.rationale}</p></div>
+      </div>
+    </div>`).join('');
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// DASHBOARD
+// ═══════════════════════════════════════════════════════════════════════════════
+async function loadDashboard(){
+  let fhList=[],saList=[];
+  try{
+    const fhKeys=await window.storage.list('fh:');
+    for(const k of (fhKeys.keys||[])){
+      try{const r=await window.storage.get(k);if(r)fhList.push(JSON.parse(r.value));}catch(e){}
+    }
+    const saKeys=await window.storage.list('sa:');
+    for(const k of (saKeys.keys||[])){
+      try{const r=await window.storage.get(k);if(r)saList.push(JSON.parse(r.value));}catch(e){}
+    }
+  }catch(e){}
+  document.getElementById('dash-fh-count').textContent=fhList.length;
+  document.getElementById('dash-sa-count').textContent=saList.length;
+  await updateRespCount();
+
+  // FH list
+  const fhEl=document.getElementById('dash-fh-list');
+  if(!fhList.length){fhEl.innerHTML=`<div class="empty-state"><div class="empty-icon">📝</div><p>No Functional Head responses yet. Responses appear here after submission.</p></div>`;
+  }else{
+    fhEl.innerHTML=fhList.sort((a,b)=>b.timestamp-a.timestamp).map(r=>{
+      const top10Names=(r.top10||[]).map((v,i)=>v?COMPS[r.progType]&&COMPS[r.progType][r.role]&&COMPS[r.progType][r.role].comps[i]?COMPS[r.progType][r.role].comps[i].n:'':'').filter(Boolean).slice(0,5).join(', ');
+      const avgRating=r.ratings&&r.ratings.length?((r.ratings.reduce((a,b)=>a+b,0)/r.ratings.filter(v=>v>0).length)||0).toFixed(1):'—';
+      return `<div class="response-item">
+        <div class="resp-avatar">${r.respondent?r.respondent[0].toUpperCase():'?'}</div>
+        <div style="flex:1">
+          <div style="font-size:13px;font-weight:600;color:var(--g800)">${r.respondent||'Anonymous'} <span style="font-size:11px;font-weight:400;color:var(--g400)">· ${r.designation||''}</span></div>
+          <div style="font-size:12px;color:var(--g500);margin-top:2px"><span class="tag tag-tech">${r.progType}</span> <span class="tag tag-neutral" style="margin-left:4px">${r.dept}</span> <span style="font-size:11px;color:var(--g400);margin-left:6px">${r.date||new Date(r.timestamp).toLocaleDateString()}</span></div>
+          <div style="font-size:11px;color:var(--g600);margin-top:4px"><strong>Top competencies:</strong> ${top10Names||'None selected'}${top10Names&&(r.top10||[]).filter(Boolean).length>5?' + '+(((r.top10||[]).filter(Boolean).length-5))+' more':''}</div>
+          <div style="font-size:11px;color:var(--g500);margin-top:2px">Avg importance rating: <strong>${avgRating}</strong>/5 · Top 10 selected: <strong>${(r.top10||[]).filter(Boolean).length}</strong></div>
+          ${r.q1?`<div style="font-size:11px;color:var(--g600);margin-top:4px;background:var(--g50);padding:6px 8px;border-radius:4px"><strong>Q1:</strong> ${r.q1.substring(0,120)}${r.q1.length>120?'…':''}</div>`:''}
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  // SA list
+  const saEl=document.getElementById('dash-sa-list');
+  if(!saList.length){saEl.innerHTML=`<div class="empty-state"><div class="empty-icon">👤</div><p>No Self-Assessment responses yet. Responses appear here after trainees submit.</p></div>`;
+  }else{
+    saEl.innerHTML=saList.sort((a,b)=>b.timestamp-a.timestamp).map(r=>{
+      const avgLevel=r.levels&&r.levels.length?(r.levels.reduce((a,b)=>a+b,0)/r.levels.length).toFixed(1):'—';
+      return `<div class="response-item">
+        <div class="resp-avatar" style="background:var(--ev)">${r.trainee?r.trainee[0].toUpperCase():'?'}</div>
+        <div style="flex:1">
+          <div style="font-size:13px;font-weight:600;color:var(--g800)">${r.trainee||'Anonymous'} <span style="font-size:11px;font-weight:400;color:var(--g400)">· ${r.empId||''}</span></div>
+          <div style="font-size:12px;color:var(--g500);margin-top:2px"><span class="tag tag-ev">${r.progType}</span> <span class="tag tag-neutral" style="margin-left:4px">${r.dept}</span> <span style="font-size:11px;color:var(--g400);margin-left:6px">DOJ: ${r.doj||'—'}</span></div>
+          <div style="font-size:11px;color:var(--g600);margin-top:4px">Avg self-assessed level: <strong>${avgLevel}</strong>/5 · Competencies rated: <strong>${(r.levels||[]).filter(v=>v>1).length}</strong>/${r.compCount||'—'}</div>
+          ${r.q3?`<div style="font-size:11px;color:var(--g600);margin-top:4px;background:var(--g50);padding:6px 8px;border-radius:4px"><strong>EV interest:</strong> ${r.q3.substring(0,120)}${r.q3.length>120?'…':''}</div>`:''}
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  // Aggregated top priorities
+  const aggEl=document.getElementById('dash-agg');
+  if(!fhList.length){aggEl.innerHTML=`<div class="empty-state"><div class="empty-icon">📊</div><p>Aggregate data will appear once Functional Head responses are submitted.</p></div>`; return;}
+  const compFreq={};
+  fhList.forEach(r=>{
+    if(!r.top10||!r.progType||!r.role) return;
+    const comps=COMPS[r.progType]&&COMPS[r.progType][r.role]?COMPS[r.progType][r.role].comps:[];
+    (r.top10||[]).forEach((v,i)=>{
+      if(v&&comps[i]){
+        const key=comps[i].n;
+        compFreq[key]=(compFreq[key]||0)+1;
+      }
+    });
+  });
+  const sorted=Object.entries(compFreq).sort((a,b)=>b[1]-a[1]).slice(0,15);
+  const maxVal=sorted[0]?sorted[0][1]:1;
+  aggEl.innerHTML=`<div class="card"><h4 style="margin-bottom:14px">Top Prioritised Competencies (across all Functional Head responses)</h4>${sorted.map(([name,count])=>`
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+      <div style="flex:1;font-size:12px;color:var(--g700);min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${name}</div>
+      <div style="width:160px;flex-shrink:0">
+        <div class="bar-wrap"><div class="bar-fill" style="width:${count/maxVal*100}%;background:var(--jsw3)"></div></div>
+      </div>
+      <div style="font-size:12px;font-weight:700;color:var(--jsw);width:30px;text-align:right">${count}</div>
+    </div>`).join('')}</div>`;
+}
+
+async function clearAllResponses(){
+  if(!confirm('Are you sure you want to delete ALL saved responses? This cannot be undone.')) return;
+  try{
+    const fhKeys=await window.storage.list('fh:');
+    const saKeys=await window.storage.list('sa:');
+    for(const k of [...(fhKeys.keys||[]),...(saKeys.keys||[])]) await window.storage.delete(k);
+    loadDashboard();
+    await updateRespCount();
+    alert('All responses cleared.');
+  }catch(e){alert('Error clearing responses.');}
+}
+function exportDashboard(){
+  const rows=['Competency,Response Type,Respondent,Department,Programme,Date'];
+  document.querySelectorAll('#dash-fh-list .response-item').forEach(el=>{
+    const name=el.querySelector('div > div')?.textContent?.trim()||'';
+    rows.push(`"${name}","Functional Head","","","",""`);
+  });
+  const blob=new Blob([rows.join('\n')],{type:'text/csv'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='JSW_Motors_TNA_Responses.csv';a.click();
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════════════════════════════════
+window.onload=function(){
+  renderOverview();
+  populateSel('dict-role','GET');
+  populateSel('fhq-role','GET');
+  populateSel('sa-role','GET');
+  populateSel('gap-role','GET');
+  renderDict();
+  renderFHQ();
+  renderSA();
+  renderGap();
+  renderTNA();
+  updateRespCount();
+};
+</script>
+</body>
+</html>
